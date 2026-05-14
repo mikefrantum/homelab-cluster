@@ -8,6 +8,9 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
   # Give homelab sudo access without password
   RUN echo 'homelab ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+  # Install chezmoi
+  RUN sh -c "$(curl -fsLS get.chezmoi.io)"
+
   # Activate mise for homelab
   RUN echo 'eval "$(mise activate bash)"' >> /home/homelab/.bashrc && \
       echo 'eval "$(mise activate zsh)"' >> /home/homelab/.zshrc
