@@ -1,0 +1,10 @@
+{
+  "build": {
+    "context": "..",
+    "dockerfile": "Dockerfile"
+  },
+  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode && sudo apt-get update && sudo apt-get install -y gh && git config --global credential.helper gh && /usr/local/bin/mise trust /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && /usr/local/bin/mise install && /usr/local/bin/mise reshim",
+  "mounts": [
+    "source=gh-config-${devcontainerId},target=/home/vscode/.local/share/gh,type=volume"
+  ]
+}
