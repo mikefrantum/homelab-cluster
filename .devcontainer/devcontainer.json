@@ -1,11 +1,10 @@
 {
-  "build": {
-    "context": "..",
-    "dockerfile": "Dockerfile"
-  },
-  "remoteUser": "homelab",
-  "postCreateCommand": "sudo chown -R homelab:homelab /home/homelab && sudo apt-get update && sudo apt-get install -y gh && git config --global credential.helper gh && /usr/local/bin/mise trust /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && /usr/local/bin/mise install && /usr/local/bin/mise reshim && chezmoi init --apply https://github.com/mikefrantum/dotfiles.git",
-  "mounts": [
-    "source=gh-config-${devcontainerId},target=/home/homelab/.local/share/gh,type=volume"
-  ]
-}
+    "build": {
+      "context": "..",
+      "dockerfile": "Dockerfile"
+    },
+    "remoteUser": "vscode",
+    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gh && git config --global credential.helper gh && /usr/local/bin/mise trust 
+  /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && /usr/local/bin/mise install && /usr/local/bin/mise reshim && chezmoi init --apply 
+  https://github.com/mikefrantum/dotfiles.git"
+  }
