@@ -4,6 +4,5 @@
       "dockerfile": "Dockerfile"
     },
     "remoteUser": "vscode",
-    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gh && git config --global credential.helper gh && /usr/local/bin/mise trust 
-  /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && /usr/local/bin/mise install && /usr/local/bin/mise reshim"
+    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gh && git config --global credential.helper gh && /usr/local/bin/mise trust /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && /usr/local/bin/mise install && /usr/local/bin/mise reshim"
   }
