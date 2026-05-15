@@ -4,4 +4,4 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
   RUN echo 'eval "$(mise activate bash)"' >> /home/vscode/.bashrc && \
       echo 'eval "$(mise activate zsh)"' >> /home/vscode/.zshrc && \
-      echo 'export PATH="/home/vscode/.local/share/mise/shims:$PATH"' >> /home/vscode/.bashrc
+      echo 'source ~/.bashrc' >> /home/vscode/.bash_profile
