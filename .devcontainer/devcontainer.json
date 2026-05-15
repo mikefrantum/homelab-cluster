@@ -8,5 +8,8 @@
       "DEVPOD": "true",
       "KUBECONFIG": "/home/vscode/ .kube/config"
     },
+    "mounts": [
+      "source=${localEnv:HOME}/.kube/config,target=/home/vscode/.kube/config,type=bind,readonly"
+    ],
     "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gh && git config --global credential.helper gh && /usr/local/bin/mise trust /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && /usr/local/bin/mise install && /usr/local/bin/mise reshim"
   }
