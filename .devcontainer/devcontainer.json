@@ -7,5 +7,9 @@
     "remoteEnv": {
       "DEVPOD": "true"
     },
+    "mounts": [
+      "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly",
+      "source=${localEnv:HOME}/.kube/config,target=/home/vscode/.kube/config,type=bind,readonly"
+    ],
     "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gh && git config --global credential.helper gh && /usr/local/bin/mise trust /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && /usr/local/bin/mise install && /usr/local/bin/mise reshim"
   }
