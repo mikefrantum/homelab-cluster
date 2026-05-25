@@ -6,6 +6,6 @@ metadata:
 spec:
   ports:
     - port: 80
-      selector:
+  selector:
     app: bookshelf
   type: ClusterIP
