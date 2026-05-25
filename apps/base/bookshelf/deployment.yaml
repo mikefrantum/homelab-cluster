@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookshelf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookshelf
+  template:
+    metadata:
+      labels:
+        app: bookshelf
+    spec:
+      containers:
+        - name: bookshelf
+          image: ghcr.io/advplyr/audiobookshelf:2.34.0
+          ports:
+            - containerPort: 3005
+          volumeMounts:
+          - name: bookshelf-data-pvc-audiobooks
+            mountPath: /etc/bookshelf/audiobooks
+	      - name: bookshelf-data-pvc-podcasts
+            mountPath: /etc/bookshelf/podcasts
+          - name: bookshelf-data-pvc-config
+            mountPath: /etc/bookshelf/config
+          - name: bookshelf-data-pvc-metadata
+            mountPath: /etc/bookshelf/metadata
+      volumes:
+        - name: bookshelf-data-pvc-audiobooks
+          persistentVolumeClaim:
+            claimName: bookshelf-data-pvc-audiobooks
+        - name: bookshelf-data-pvc-podcasts
+          persistentVolumeClaim:
+            claimName: bookshelf-data-pvc-podcasts
+        - name: bookshelf-data-pvc-config
+          persistentVolumeClaim:
+            claimName: bookshelf-data-pvc-config
+        - name: bookshelf-data-pvc-metadata
+          persistentVolumeClaim:
+            claimName: bookshelf-data-pvc-metadata
