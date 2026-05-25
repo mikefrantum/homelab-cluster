@@ -2,13 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflared
+  namespace: linkding
 spec:
   selector:
     matchLabels:
       app: cloudflared
   replicas: 2 # You could also consider elastic scaling for this deployment
-  template:
+  templatet
     metadata:
+      f my Cloud Flare file.
       labels:
         app: cloudflared
     spec:
