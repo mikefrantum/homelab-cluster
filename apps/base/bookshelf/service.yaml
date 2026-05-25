@@ -5,7 +5,7 @@ metadata:
   namespace: bookshelf
 spec:
   ports:
-    - port: 3005
-  selector:
+    - port: 80
+      selector:
     app: bookshelf
   type: ClusterIP
