@@ -20,7 +20,7 @@ spec:
           volumeMounts:
           - name: bookshelf-data-pvc-audiobooks
             mountPath: /etc/bookshelf/audiobooks
-	      - name: bookshelf-data-pvc-podcasts
+          - name: bookshelf-data-pvc-podcasts
             mountPath: /etc/bookshelf/podcasts
           - name: bookshelf-data-pvc-config
             mountPath: /etc/bookshelf/config
