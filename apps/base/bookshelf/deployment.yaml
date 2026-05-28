@@ -41,16 +41,16 @@ spec:
               name: bookshelf-podcasts
 
 
-        volumes:
-          - name: bookshelf-audiobooks
-            persistentVolumeClaim:
-              claimName: bookshelf-audiobooks
-          - name: bookshelf-podcasts
-            persistentVolumeClaim:
-              claimName: bookshelf-podcasts
-          - name: bookshelf-config
-            persistentVolumeClaim:
-              claimName: bookshelf-config
-          - name: bookshelf-metadata
-            persistentVolumeClaim:
-              claimName: bookshelf-metadata
+      volumes:
+        - name: bookshelf-audiobooks
+          persistentVolumeClaim:
+            claimName: bookshelf-audiobooks
+        - name: bookshelf-podcasts
+          persistentVolumeClaim:
+            claimName: bookshelf-podcasts
+        - name: bookshelf-config
+          persistentVolumeClaim:
+            claimName: bookshelf-config
+        - name: bookshelf-metadata
+          persistentVolumeClaim:
+            claimName: bookshelf-metadata
