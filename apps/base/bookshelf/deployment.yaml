@@ -18,7 +18,7 @@ spec:
 
           envFrom:
             - configMapRef:
-                name: audiobookshelf-configmap
+                name: bookshelf-configmap
 
           ports:
             - containerPort: 3005
@@ -26,11 +26,11 @@ spec:
 
           volumeMounts:
             - mountPath: /config
-              name: audiobookshelf-config
+              name: bookshelf-config
             - mountPath: /metadata
-              name: audiobookshelf-metadata
+              name: bookshelf-metadata
             - mountPath: /audiobooks
-              name: audiobookshelf-audiobooks
+              name: bookshelf-audiobooks
     restartPolicy: Always
 
     volumes:
