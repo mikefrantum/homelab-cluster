@@ -12,36 +12,39 @@ spec:
       labels:
         app: bookshelf
     spec:
-      securityContext:
-        fsGroup: 1000 # www-data group ID
-        runAsUser: 1000 # www-data user ID
-        runAsGroup: 1000 # www-data group ID
       containers:
         - name: bookshelf
           image: ghcr.io/advplyr/audiobookshelf:2.34.0
           ports:
-            - containerPort: 80
-          securityContext:
-            allowPrivilegeEscalation: false
+            - containerPort: 3005
+              protocol: TCP
+			envFrom:
+            - configMapRef:
+                name: audiobookshelf-configmap
+
+          ports:
+            - containerPort: 3005
+              protocol: TCP
+
           volumeMounts:
-          - name: bookshelf-data-pvc-audiobooks
-            mountPath: /audiobooks
-          - name: bookshelf-data-pvc-podcasts
-            mountPath: podcasts
-          - name: bookshelf-data-pvc-config
-            mountPath: /config
-          - name: bookshelf-data-pvc-metadata
-            mountPath: /metadata
+            - mountPath: /config
+              name: audiobookshelf-config
+            - mountPath: /metadata
+              name: audiobookshelf-metadata
+            - mountPath: /audiobooks
+              name: audiobookshelf-audiobooks
+    restartPolicy: Always
+
       volumes:
-        - name: bookshelf-data-pvc-audiobooks
+        - name: bookshelf-audiobooks
           persistentVolumeClaim:
-            claimName: bookshelf-data-pvc-audiobooks
-        - name: bookshelf-data-pvc-podcasts
+            claimName: bookshelf-audiobooks
+        - name: bookshelf-podcasts
           persistentVolumeClaim:
-            claimName: bookshelf-data-pvc-podcasts
-        - name: bookshelf-data-pvc-config
+            claimName: bookshelf-podcasts
+        - name: bookshelf-config
           persistentVolumeClaim:
-            claimName: bookshelf-data-pvc-config
-        - name: bookshelf-data-pvc-metadata
+            claimName: bookshelf-config
+        - name: bookshelf-metadata
           persistentVolumeClaim:
-            claimName: bookshelf-data-pvc-metadata
+            claimName: bookshelf-metadata

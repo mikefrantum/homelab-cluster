@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bookshelf-data-pvc-audiobooks
+  name: bookshelf-audiobooks
 spec:
   accessModes:
     - ReadWriteOnce
@@ -12,7 +12,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bookshelf-data-pvc-podcasts
+  name: bookshelf-podcasts
 spec:
   accessModes:
     - ReadWriteOnce
@@ -23,7 +23,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bookshelf-data-pvc-config
+  name: bookshelf-config
 spec:
   accessModes:
     - ReadWriteOnce
@@ -34,7 +34,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: bookshelf-data-pvc-metadata
+  name: bookshelf-metadata
 spec:
   accessModes:
     - ReadWriteOnce
