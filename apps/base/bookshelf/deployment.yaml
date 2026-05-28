@@ -34,12 +34,12 @@ spec:
     restartPolicy: Always
 
     volumes:
-        - name: audiobookshelf-config
+        - name: bookshelf-config
           persistentVolumeClaim:
-            claimName: audiobookshelf-config
-        - name: audiobookshelf-metadata
+            claimName: bookshelf-config
+        - name: bookshelf-metadata
           persistentVolumeClaim:
-            claimName: audiobookshelf-metadata
-        - name: audiobookshelf-audiobooks
+            claimName: bookshelf-metadata
+        - name: bookshelf-audiobooks
           persistentVolumeClaim:
-            claimName: audiobookshelf-audiobooks
+            claimName: bookshelf-audiobooks
