@@ -43,11 +43,13 @@ spec:
 
       volumes:
         - name: bookshelf-audiobooks
-          persistentVolumeClaim:
-            claimName: bookshelf-audiobooks
+          nfs:
+            server: 192.168.1.9
+            path: /mnt/user/Media/AudioBooks
         - name: bookshelf-podcasts
-          persistentVolumeClaim:
-            claimName: bookshelf-podcasts
+          nfs:
+            server: 192.168.1.9
+            path: /mnt/user/Media/Podcasts
         - name: bookshelf-config
           persistentVolumeClaim:
             claimName: bookshelf-config
