@@ -12,13 +12,5 @@
     "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly",
     "source=${localEnv:HOME}/.kube,target=/home/vscode/.kube,type=bind,readonly"
   ],
-  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.kube && \
-    sudo apt-get update && \
-    sudo apt-get install -y gh && \
-    git config --global credential.helper gh && \
-    /usr/local/bin/mise trust /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && \
-    /usr/local/bin/mise install && \
-    /usr/local/bin/mise reshim && \
-    sudo curl -Lo /usr/local/bin/kubens https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens && \
-    sudo chmod +x /usr/local/bin/kubens"
+  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.kube && sudo apt-get update && sudo apt-get install -y gh && git config --global credential.helper gh && /usr/local/bin/mise trust /workspaces/$DEVPOD_WORKSPACE_ID/mise.toml && /usr/local/bin/mise install && /usr/local/bin/mise reshim && sudo curl -Lo /usr/local/bin/kubens https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens && sudo chmod +x /usr/local/bin/kubens"
 }
