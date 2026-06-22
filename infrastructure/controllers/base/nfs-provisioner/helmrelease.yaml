@@ -15,11 +15,10 @@ spec:
   interval: 1h
   values:
     nfs:
-      # <<< CHANGE ME - Point to your Unraid NFS share >>>
-      server: 192.168.1.9          # <<< CHANGE ME - Replace with your Unraid server's IP
+      server: 192.168.1.9
       path: /mnt/user/k8s-volumes
 
     storageClass:
-      create: false                 # We create it manually above
+      create: false
       name: unraid-nfs
 
