@@ -1,0 +1,35 @@
+replicaCount: 1
+
+persistence:
+  enabled: true
+  size: 20Gi
+
+  # <<< This now points to your Unraid share >>>
+  storageClassName: unraid-nfs
+
+ingress:
+  enabled: true
+  className: traefik
+
+  hosts:
+    - host: forgejo.nohermosa.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+  tls:
+    - secretName: forgejo-tls
+      hosts:
+        - forgejo.nohermosa.com
+
+config:
+  APP_NAME: "Homelab Forgejo"
+  server:
+    DOMAIN: forgejo.nohermosa.com
+    ROOT_URL: https://forgejo.nohermosa.com/
+    PROTOCOL: https
+
+admin:
+  username: admin
+  email: mike@nohermosa.com
+

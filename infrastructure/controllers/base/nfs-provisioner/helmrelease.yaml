@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nfs-subdir-external-provisioner
+  namespace: kube-system
+spec:
+  chart:
+    spec:
+      chart: nfs-subdir-external-provisioner
+      version: ">= 4.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: nfs-subdir-external-provisioner
+        namespace: flux-system
+  interval: 1h
+  values:
+    nfs:
+      # <<< CHANGE ME - Point to your Unraid NFS share >>>
+      server: 192.168.1.9          # <<< CHANGE ME - Replace with your Unraid server's IP
+      path: /mnt/user/k8s-volumes
+
+    storageClass:
+      create: false                 # We create it manually above
+      name: unraid-nfs
+

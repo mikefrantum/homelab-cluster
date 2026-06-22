@@ -1,0 +1,11 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: forgejo
+  namespace: forgejo
+spec:
+  values:
+    # Example staging overrides (adjust as needed)
+    persistence:
+      size: 10Gi
+
