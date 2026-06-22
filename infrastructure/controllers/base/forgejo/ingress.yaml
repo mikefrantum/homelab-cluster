@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: forgejo
+  namespace: forgejo
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    external-dns.alpha.kubernetes.io/hostname: forgejo.nohermosa.com
+spec:
+  ingressClassName: traefik          # <<< CHANGE ME if using cilium / nginx
+  rules:
+    - host: forgejo.nohermosa.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: forgejo
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - forgejo.nohermosa.com
+      secretName: forgejo-tls
+

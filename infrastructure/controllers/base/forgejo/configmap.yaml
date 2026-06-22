@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: forgejo-config
+  namespace: forgejo
+data:
+  FORGEJO__server__DOMAIN: forgejo.nohermosa.com
+  FORGEJO__server__ROOT_URL: https://forgejo.nohermosa.com/
+  FORGEJO__server__HTTP_PORT: "3000"
+  FORGEJO__server__SSH_DOMAIN: forgejo.nohermosa.com
+  FORGEJO__server__SSH_PORT: "2222"
+  FORGEJO__server__SSH_LISTEN_PORT: "2222"
+  FORGEJO__database__DB_TYPE: postgres
+  FORGEJO__database__HOST: forgejo-db:5432
+  FORGEJO__database__NAME: forgejo
+  FORGEJO__database__SSL_MODE: disable
+  FORGEJO__repository__ROOT: /data/git
+  FORGEJO__log__ROOT_PATH: /data/log
+  FORGEJO__security__INSTALL_LOCK: "true"
+  FORGEJO__actions__ENABLED: "true"
+
