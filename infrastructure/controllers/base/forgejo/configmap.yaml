@@ -5,6 +5,7 @@ metadata:
   namespace: forgejo
 data:
   # Server settings
+  FORGEJO__service__DISABLE_REGISTRATION: "true"
   FORGEJO__server__DOMAIN: forgejo.nohermosa.com
   FORGEJO__server__ROOT_URL: https://forgejo.nohermosa.com/
   FORGEJO__server__HTTP_PORT: "3000"
