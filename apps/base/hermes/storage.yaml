@@ -1,0 +1,27 @@
+# Hermes durable state (auth, memories, db, config, skills).
+# Provisioner creates the subdir on Unraid as: hermes-hermes-state
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hermes-state
+  namespace: hermes
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: unraid-nfs
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Shared drop folder. ReadWriteMany so Syncthing/other readers can also touch it.
+# Provisioner creates the subdir on Unraid as: hermes-hermes-shared
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hermes-shared
+  namespace: hermes
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: unraid-nfs
+  resources:
+    requests:
+      storage: 50Gi
