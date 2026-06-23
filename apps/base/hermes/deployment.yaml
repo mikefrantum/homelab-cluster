@@ -44,7 +44,7 @@ spec:
             - name: state
               mountPath: /opt/data
             - name: shared
-              mountPath: /opt/data/shared
+              mountPath: /opt/shared
       volumes:
         - name: state
           persistentVolumeClaim:
