@@ -16,8 +16,6 @@ spec:
   values:
     auth:
       existingSecret: mariadb-credentials
-      secretKeys:
-        adminPasswordKey: root-password
     primary:
       persistence:
         enabled: true
