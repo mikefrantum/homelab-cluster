@@ -4,46 +4,49 @@ metadata:
   name: cloudflared
   namespace: wordpress-zoomzoom
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: cloudflared
+  replicas: 1
   template:
     metadata:
       labels:
         app: cloudflared
     spec:
       containers:
-        - name: cloudflared
-          image: cloudflare/cloudflared:latest
-          args:
-            - tunnel
-            - run
-          env:
-            - name: TUNNEL_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: tunnel-token
-                  key: token
-          volumeMounts:
-            - name: config
-              mountPath: /etc/cloudflared
-              readOnly: true
-            - name: creds
-              mountPath: /etc/cloudflared/creds
-              readOnly: true
-      volumes:
+      - name: cloudflared
+        image: cloudflare/cloudflared:latest
+        args:
+        - tunnel
+        - --config
+        - /etc/cloudflared/config/config.yaml
+        - run
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: 2000
+          failureThreshold: 1
+          initialDelaySeconds: 10
+        volumeMounts:
         - name: config
-          configMap:
-            name: cloudflared
+          mountPath: /etc/cloudflared/config
+          readOnly: true
         - name: creds
-          secret:
-            secretName: tunnel-credentials
+          mountPath: /etc/cloudflared/creds
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: cloudflared
+      - name: creds
+        secret:
+          secretName: tunnel-credentials
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: cloudflared
+  namespace: wordpress-zoomzoom
 data:
   config.yaml: |
     tunnel: 36620837-a284-4d50-9556-33e15568c169
@@ -54,3 +57,4 @@ data:
       - hostname: zoomzoom.design
         service: http://wordpress.wordpress-zoomzoom.svc.cluster.local:80
       - service: http_status:404
+
