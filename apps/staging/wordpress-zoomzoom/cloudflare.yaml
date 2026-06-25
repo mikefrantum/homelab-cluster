@@ -28,17 +28,17 @@ spec:
             failureThreshold: 1
             initialDelaySeconds: 10
             periodSeconds: 10
-          env:
-            - name: TUNNEL_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: tunnel-credentials
-                  key: token
           volumeMounts:
             - name: config
               mountPath: /etc/cloudflared/config
               readOnly: true
+            - name: creds
+              mountPath: /etc/cloudflared/creds
+              readOnly: true
       volumes:
+        - name: creds
+          secret:
+            secretName: tunnel-credentials
         - name: config
           configMap:
             name: cloudflared
@@ -54,10 +54,11 @@ metadata:
 data:
   config.yaml: |
     tunnel: 36620837-a284-4d50-9556-33e15568c169
-    credentials-file: /dev/null
+    credentials-file: /etc/cloudflared/creds/credentials.json
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
       - hostname: zoomzoom.design
         service: http://wordpress.wordpress-zoomzoom.svc.cluster.local:80
       - service: http_status:404
+
