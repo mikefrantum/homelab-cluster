@@ -27,7 +27,7 @@ spec:
                 name: wordpress-db
           env:
             - name: WORDPRESS_CONFIG_EXTRA
-              value: "define('FS_METHOD', 'direct');"
+              value: "define('FS_METHOD', 'direct'); define('WP_DEBUG', true); define('WP_DEBUG_LOG', true); define('WP_DEBUG_DISPLAY', false);"
           resources:
             requests:
               memory: "128Mi"
