@@ -13,6 +13,8 @@ spec:
       labels:
         app: wordpress
     spec:
+      securityContext:
+        fsGroup: 33
       containers:
         - name: wordpress
           image: wordpress:6.5-php8.2-apache
