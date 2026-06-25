@@ -43,7 +43,7 @@ metadata:
   namespace: wordpress-zoomzoom
 data:
   config.yaml: |
-    tunnel: 36620837-a284-4d50-9556-33e15568c169
+    tunnel: e854b46e-4ae9-424b-9eff-8ef271c99a59 
     credentials-file: /etc/cloudflared/creds/credentials.json
     metrics: 0.0.0.0:2000
     no-autoupdate: true
