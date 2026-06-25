@@ -23,6 +23,16 @@ spec:
           envFrom:
             - secretRef:
                 name: wordpress-db
+          env:
+            - name: WORDPRESS_CONFIG_EXTRA
+              value: "define('FS_METHOD', 'direct');"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           volumeMounts:
             - name: wp-content
               mountPath: /var/www/html/wp-content
