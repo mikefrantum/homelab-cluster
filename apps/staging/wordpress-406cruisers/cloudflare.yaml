@@ -49,7 +49,7 @@ metadata:
   namespace: wordpress-406cruisers
 data:
   config.yaml: |
-    tunnel: 1389717f-bc2d-47ef-b196-8ccfc9cbec90
+    tunnel: 8ae5ca69-a294-4972-8e43-d0ecc1bf63fa 
     credentials-file: /etc/cloudflared/creds/credentials.json
     metrics: 0.0.0.0:2000
     no-autoupdate: true
