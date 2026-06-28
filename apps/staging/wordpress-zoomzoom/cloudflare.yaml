@@ -50,5 +50,7 @@ data:
     ingress:
       - hostname: zoomzoom.design
         service: http://wordpress.wordpress-zoomzoom.svc.cluster.local:80
+      - hostname: www.zoomzoom.design
+        service: http://wordpress.wordpress-zoomzoom.svc.cluster.local:80
       - service: http_status:404
 
