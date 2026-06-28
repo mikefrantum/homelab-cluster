@@ -55,8 +55,8 @@ data:
     no-autoupdate: true
     ingress:
       - hostname: 406cruisers.com
-        service: http://wordpress.wordpress-bridger.svc.cluster.local:80
+        service: http://wordpress.wordpress-406cruisers.svc.cluster.local:80
       - hostname: www.406cruisers.com
-        service: http://wordpress.wordpress-bridger.svc.cluster.local:80
+        service: http://wordpress.wordpress-406cruisers.svc.cluster.local:80
       - service: http_status:404
 
