@@ -56,5 +56,7 @@ data:
     ingress:
       - hostname: bridgerdrilling.com
         service: http://wordpress.wordpress-bridger.svc.cluster.local:80
+      - hostname: www.bridgerdrilling.com
+        service: http://wordpress.wordpress-bridger.svc.cluster.local:80
       - service: http_status:404
 
