@@ -14,31 +14,27 @@ spec:
         app: cloudflared
     spec:
       containers:
-        - name: cloudflared
-          image: cloudflare/cloudflared:latest
-          args:
-            - tunnel
-            - run
-          env:
-            - name: TUNNEL_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: tunnel-token
-                  key: token
-          volumeMounts:
-            - name: config
-              mountPath: /etc/cloudflared
-              readOnly: true
-            - name: creds
-              mountPath: /etc/cloudflared/creds
-              readOnly: true
-      volumes:
+      - name: cloudflared
+        image: cloudflare/cloudflared:latest
+        args:
+        - tunnel
+        - --config
+        - /etc/cloudflared/config/config.yaml
+        - run
+        volumeMounts:
         - name: config
-          configMap:
-            name: cloudflared
+          mountPath: /etc/cloudflared/config
+          readOnly: true
         - name: creds
-          secret:
-            secretName: tunnel-credentials
+          mountPath: /etc/cloudflared/creds
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: cloudflared
+      - name: creds
+        secret:
+          secretName: tunnel-credentials
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -47,7 +43,7 @@ metadata:
   namespace: hugo
 data:
   config.yaml: |
-    tunnel: 358829e7-2dd3-4fbf-bc4c-aeb15b50ac25
+    tunnel: 358829e7-2dd3-4fbf-bc4c-aeb15b50ac25 
     credentials-file: /etc/cloudflared/creds/credentials.json
     metrics: 0.0.0.0:2000
     no-autoupdate: true
