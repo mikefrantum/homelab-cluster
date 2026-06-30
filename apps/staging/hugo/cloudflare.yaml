@@ -45,11 +45,13 @@ metadata:
   name: cloudflared
 data:
   config.yaml: |
-    tunnel: 36620837-a284-4d50-9556-33e15568c169
+    tunnel: 358829e7-2dd3-4fbf-bc4c-aeb15b50ac25
     credentials-file: /etc/cloudflared/creds/credentials.json
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
       - hostname: mikefrantum.dev
+        service: http://hugo.hugo.svc.cluster.local:80
+      - hostname: www.mikefrantum.dev
         service: http://hugo.hugo.svc.cluster.local:80
       - service: http_status:404
