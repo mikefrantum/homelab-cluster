@@ -15,10 +15,13 @@ spec:
       initContainers:
         - name: git-clone
           image: alpine/git:latest
+          securityContext:
+            runAsUser: 0
           command:
             - sh
             - -c
             - |
+              git config --global --add safe.directory /site
               if [ -d /site/.git ]; then
                 echo "Repo exists, pulling latest..."
                 cd /site && git pull
@@ -55,11 +58,9 @@ spec:
             - containerPort: 1313
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "50m"
+              memory: "256Mi"
             limits:
               memory: "256Mi"
-              cpu: "200m"
           volumeMounts:
             - name: site
               mountPath: /site
@@ -67,3 +68,4 @@ spec:
         - name: site
           persistentVolumeClaim:
             claimName: hugo-data
+
