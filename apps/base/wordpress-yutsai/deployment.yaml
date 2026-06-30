@@ -29,11 +29,9 @@ spec:
               value: "define('FS_METHOD', 'direct'); define('WP_DEBUG', true); define('WP_DEBUG_LOG', true); define('WP_DEBUG_DISPLAY', false);"
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "100m"
+              memory: "512Mi"              
             limits:
-              memory: "1Gi"
-              cpu: "500m"
+              memory: "2Gi"             
           volumeMounts:
             - name: wp-content
               mountPath: /var/www/html/wp-content
