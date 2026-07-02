@@ -21,6 +21,7 @@ spec:
             - sh
             - -c
             - |
+              git config --global --add safe.directory /site
               if [ -d /site/.git ]; then
                 echo "Repo exists, pulling latest..."
                 cd /site && git pull && git submodule update --init --recursive
