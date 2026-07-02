@@ -21,14 +21,14 @@ spec:
             - sh
             - -c
             - |
-              git config --global --add safe.directory /site
               if [ -d /site/.git ]; then
                 echo "Repo exists, pulling latest..."
-                cd /site && git reset --hard && git pull
+                cd /site && git pull && git submodule update --init --recursive
               else
                 echo "Cloning repo..."
-                git clone https://$(FORGEJO_USER):$(FORGEJO_TOKEN)@forgejo.nohermosa.com/mike/mikefrantum-dev.git /site
+                git clone --recurse-submodules https://$(FORGEJO_USER):$(FORGEJO_TOKEN)@forgejo.nohermosa.com/mike/mikefrantum-dev.git /site
               fi
+
           env:
             - name: FORGEJO_USER
               valueFrom:
