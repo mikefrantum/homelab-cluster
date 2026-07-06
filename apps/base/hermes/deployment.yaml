@@ -34,12 +34,14 @@ spec:
               value: America/Denver
             - name: HERMES_HOME
               value: /opt/data
+            - name: HERMES_SHARED_AUTH_DIR
+              value: /opt/data/shared-auth
           resources:
             requests:
               cpu: 250m
-              memory: 512Mi
+              memory: 2Gi
             limits:
-              memory: 4Gi
+              memory: 6Gi
           volumeMounts:
             - name: state
               mountPath: /opt/data
