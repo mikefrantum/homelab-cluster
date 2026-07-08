@@ -1,25 +1,4 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: bookshelf-audiobooks
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: bookshelf-podcasts
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
+# --- existing local-path PVCs (kept until data is copied to Longhorn) ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -38,6 +17,31 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# --- new Longhorn PVCs (migration targets) ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bookshelf-config-lh
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bookshelf-metadata-lh
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
   resources:
     requests:
       storage: 1Gi
