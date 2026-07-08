@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: longhorn
+  namespace: longhorn-system
+spec:
+  chart:
+    spec:
+      chart: longhorn
+      version: ">= 1.7.0"
+      sourceRef:
+        kind: HelmRepository
+        name: longhorn
+        namespace: flux-system
+  interval: 1h
+  install:
+    createNamespace: true
+  values:
+    defaultSettings:
+      # match your default replica count to the 2 nodes you have now
+      defaultReplicaCount: 2
+      # the dedicated disk you mounted
+      defaultDataPath: /var/lib/longhorn
+    persistence:
+      # don't make Longhorn the default SC yet — keep unraid-nfs as default
+      # so nothing auto-migrates until you deliberately move it
+      defaultClass: false
+      defaultClassReplicaCount: 2

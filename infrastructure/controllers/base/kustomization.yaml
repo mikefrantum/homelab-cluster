@@ -5,3 +5,4 @@ resources:
   - forgejo
   - nfs-provisioner
   - bitnami
+  - longhorn
