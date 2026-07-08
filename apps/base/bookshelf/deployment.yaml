@@ -40,7 +40,6 @@ spec:
             - mountPath: /podcasts
               name: bookshelf-podcasts
 
-
       volumes:
         - name: bookshelf-audiobooks
           nfs:
@@ -52,7 +51,7 @@ spec:
             path: /mnt/user/Media/Podcasts
         - name: bookshelf-config
           persistentVolumeClaim:
-            claimName: bookshelf-config
+            claimName: bookshelf-config-lh      # ← changed to -lh
         - name: bookshelf-metadata
           persistentVolumeClaim:
-            claimName: bookshelf-metadata
+            claimName: bookshelf-metadata-lh    # ← changed to -lh
