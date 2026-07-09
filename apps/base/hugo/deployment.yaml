@@ -68,5 +68,5 @@ spec:
       volumes:
         - name: site
           persistentVolumeClaim:
-            claimName: hugo-data
+            claimName: hugo-data-lh
 

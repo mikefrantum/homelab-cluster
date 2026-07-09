@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: hugo-data
+  name: hugo-data-lh
   namespace: hugo
 spec:
-  accessModes: [ReadWriteMany]
-  storageClassName: unraid-nfs
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
   resources:
     requests:
       storage: 5Gi
