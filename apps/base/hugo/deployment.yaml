@@ -26,10 +26,11 @@ spec:
                 echo "Repo exists, pulling latest..."
                 cd /site && git pull && git submodule update --init --recursive
               else
-                echo "Cloning repo..."
-                git clone --recurse-submodules https://$(FORGEJO_USER):$(FORGEJO_TOKEN)@forgejo.nohermosa.com/mike/mikefrantum-dev.git /site
+                echo "Cloning repo into temp then moving..."
+                git clone --recurse-submodules https://$(FORGEJO_USER):$(FORGEJO_TOKEN)@forgejo.nohermosa.com/mike/mikefrantum-dev.git /tmp/site
+                cp -a /tmp/site/. /site/
+                rm -rf /tmp/site
               fi
-
           env:
             - name: FORGEJO_USER
               valueFrom:
