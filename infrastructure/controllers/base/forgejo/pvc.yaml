@@ -10,4 +10,16 @@ spec:
     requests:
       storage: 20Gi
   storageClassName: unraid-nfs
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgejo-data-lh
+  namespace: forgejo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: longhorn
