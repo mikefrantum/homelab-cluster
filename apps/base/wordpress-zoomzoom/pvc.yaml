@@ -8,4 +8,14 @@ spec:
   resources:
     requests:
       storage: 10Gi
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wordpress-content-lh
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
