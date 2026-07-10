@@ -25,3 +25,16 @@ spec:
   resources:
     requests:
       storage: 50Gi
+---
+# Longhorn migration target for durable state (replicated).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hermes-state-lh
+  namespace: hermes
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
