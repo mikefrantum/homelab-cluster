@@ -19,6 +19,6 @@ spec:
     primary:
       persistence:
         enabled: true
-        existingClaim: mariadb-data
+        existingClaim: mariadb-data-lh
     secondary:
       replicaCount: 0
