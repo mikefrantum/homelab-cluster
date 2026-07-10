@@ -29,13 +29,13 @@ spec:
               value: "define('FS_METHOD', 'direct'); define('WP_DEBUG', true); define('WP_DEBUG_LOG', true); define('WP_DEBUG_DISPLAY', false);"
           resources:
             requests:
-              memory: "128Mi"             
+              memory: "128Mi"
             limits:
-              memory: "1Gi"              
+              memory: "1Gi"
           volumeMounts:
             - name: wp-content
               mountPath: /var/www/html/wp-content
       volumes:
         - name: wp-content
           persistentVolumeClaim:
-            claimName: wordpress-content
+            claimName: wordpress-content-lh
