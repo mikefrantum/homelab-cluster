@@ -50,7 +50,7 @@ spec:
       volumes:
         - name: state
           persistentVolumeClaim:
-            claimName: hermes-state
+            claimName: hermes-state-lh
         - name: shared
           persistentVolumeClaim:
             claimName: hermes-shared
