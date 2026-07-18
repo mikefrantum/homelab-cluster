@@ -47,7 +47,7 @@ spec:
             path: /mnt/user/Media/AudioBooks
         - name: bookshelf-podcasts
           nfs:
-            server: 10..10.10.10
+            server: 10.10.10.10
             path: /mnt/user/Media/Podcasts
         - name: bookshelf-config
           persistentVolumeClaim:
