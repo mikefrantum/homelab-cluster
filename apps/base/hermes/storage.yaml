@@ -13,7 +13,28 @@ spec:
       storage: 10Gi
 ---
 # Shared drop folder. ReadWriteMany so Syncthing/other readers can also touch it.
-# Provisioner creates the subdir on Unraid as: hermes-hermes-shared
+# Static PV pointing at existing data on Unraid (new IP 10.10.10.10 after network migration).
+# Data lives at: /mnt/user/k8s-volumes/hermes-hermes-shared
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hermes-shared-pv
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes: ["ReadWriteMany"]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: unraid-nfs
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - noresvport
+    - timeo=600
+    - retrans=2
+  nfs:
+    server: 10.10.10.10
+    path: /mnt/user/k8s-volumes/hermes-hermes-shared
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -25,6 +46,7 @@ spec:
   resources:
     requests:
       storage: 50Gi
+  volumeName: hermes-shared-pv
 ---
 # Longhorn migration target for durable state (replicated).
 apiVersion: v1
