@@ -20,5 +20,5 @@ spec:
 
   storage:
     size: 1Gi
-    storageClass: unraid-nfs
+    storageClass: longhorn 
 
