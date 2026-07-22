@@ -35,12 +35,13 @@ spec:
       persistence:
         library:
           existingClaim: immich-library
-    persistence:
-      external:
-        enabled: true
-        type: nfs
-        server: 10.10.10.10
-        path: /mnt/user/k8s-volumes/immich-immich-library/external
-        mountPath: /external
-        readOnly: false
+    server:
+      persistence:
+        external:
+          enabled: true
+          type: nfs
+          server: 10.10.10.10
+          path: /mnt/user/k8s-volumes/immich-immich-library/external
+          globalMounts:
+            - path: /external
 
