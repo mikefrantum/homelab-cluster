@@ -5,5 +5,4 @@ resources:
   - postgres-cluster.yaml
   - storage.yaml
   - helmrelease.yaml
-  - helmrepository.yaml
 
