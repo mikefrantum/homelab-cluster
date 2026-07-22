@@ -1,0 +1,38 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich
+  namespace: immich
+spec:
+  chart:
+    spec:
+      chart: immich
+      version: "0.13.1"
+      sourceRef:
+        kind: HelmRepository
+        name: immich
+        namespace: flux-system
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            env:
+                REDIS_HOSTNAME: '{{ printf "%s-valkey" .Release.Name }}'
+                IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
+                # Add the env vars to connect to your database here. see the example below
+                #
+                DB_HOSTNAME: immich-postgresql-rw
+                DB_USERNAME: immich
+                DB_DATABASE_NAME: immich
+                DB_PASSWORD:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-postgresql-app 
+                      key: password
+    immich:
+      persistence:
+        library:
+          existingClaim: immich-library
+  interval: 1h
+ 
