@@ -20,6 +20,6 @@ spec:
         - CREATE EXTENSION IF NOT EXISTS vector CASCADE;
 
   storage:
-    size: 1Gi
+    size: 10Gi
     storageClass: longhorn 
 
