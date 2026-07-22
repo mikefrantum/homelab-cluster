@@ -15,8 +15,9 @@ spec:
     initdb:
       database: immich
       owner: app
-      postInitSQL:
+      postInitSuperuserSQL:
         - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+        - CREATE EXTENSION IF NOT EXISTS vector CASCADE;
 
   storage:
     size: 1Gi
