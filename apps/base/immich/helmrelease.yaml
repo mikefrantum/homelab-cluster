@@ -13,6 +13,8 @@ spec:
         name: immich
         namespace: flux-system
   values:
+    valkey:
+     enabled: true
     controllers:
       main:
         containers:
