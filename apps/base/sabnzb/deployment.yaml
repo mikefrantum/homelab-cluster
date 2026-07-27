@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sabnzbd
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sabnzbd
+  template:
+    metadata:
+      labels:
+        app: sabnzbd
+    spec:
+      serviceAccountName: tailscale-sabnzbd
+      initContainers:
+        - name: sysctls
+          image: busybox:1.36
+          securityContext:
+            privileged: true
+          command:
+            - sh
+            - -c
+            - |
+              sysctl -w net.ipv4.ip_forward=1
+              sysctl -w net.ipv6.conf.all.forwarding=1
+      containers:
+        # --- Tailscale sidecar (routes all pod traffic via exit node) ---
+        - name: tailscale
+          image: ghcr.io/tailscale/tailscale:v1.82.5
+          env:
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-sabnzbd-auth
+                  key: TS_AUTHKEY
+            - name: TS_KUBE_SECRET
+              value: tailscale-sabnzbd-state
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_ACCEPT_DNS
+              value: "true"
+            # Route all traffic through the k8s exit node
+            - name: TS_EXTRA_ARGS
+              value: "--exit-node=tailscale-exit --exit-node-allow-lan-access=true"
+            - name: TS_STATE_DIR
+              value: /var/lib/tailscale
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          volumeMounts:
+            - name: tailscale-state
+              mountPath: /var/lib/tailscale
+            - name: dev-tun
+              mountPath: /dev/net/tun
+
+        # --- SABnzbd ---
+        - name: sabnzbd
+          image: lscr.io/linuxserver/sabnzbd:4.5.1
+          env:
+            - name: PUID
+              value: "99"
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: "America/Denver"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: downloads
+              mountPath: /downloads
+            - name: media
+              mountPath: /media
+
+      volumes:
+        - name: tailscale-state
+          persistentVolumeClaim:
+            claimName: tailscale-sabnzbd-state
+        - name: dev-tun
+          hostPath:
+            path: /dev/net/tun
+        - name: config
+          persistentVolumeClaim:
+            claimName: sabnzbd-config
+        - name: downloads
+          nfs:
+            server: 10.10.10.10
+            path: /mnt/user/Media/_DOWNLOADS
+        - name: media
+          nfs:
+            server: 10.10.10.10
+            path: /mnt/user/Media

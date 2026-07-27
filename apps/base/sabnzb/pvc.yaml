@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: tailscale-exit-state
-  namespace: tailscale
+  name: sabnzbd-config
+  namespace: media
 spec:
   accessModes:
     - ReadWriteOnce

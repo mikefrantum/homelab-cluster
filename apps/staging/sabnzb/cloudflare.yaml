@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  namespace: media
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cloudflared-sabnzbd
+  template:
+    metadata:
+      labels:
+        app: cloudflared-sabnzbd
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:2026.7.2
+          args:
+            - tunnel
+            - --config
+            - /etc/cloudflared/config/config.yaml
+            - run
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /etc/cloudflared/config
+              readOnly: true
+            - name: creds
+              mountPath: /etc/cloudflared/creds
+              readOnly: true
+      volumes:
+        - name: creds
+          secret:
+            secretName: tunnel-credentials
+        - name: config
+          configMap:
+            name: cloudflared-sabnzbd
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-sabnzbd
+  namespace: media
+data:
+  config.yaml: |
+    tunnel: REPLACE_WITH_TUNNEL_NAME
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    metrics: 0.0.0.0:2000
+    no-autoupdate: true
+    ingress:
+      - hostname: sab.nohermosa.com
+        service: http://sabnzbd.media.svc.cluster.local:8080
+      - service: http_status:404
