@@ -52,6 +52,8 @@ spec:
               value: "United States"
             - name: PORT_FORWARD_ONLY
               value: "on"
+            - name: FIREWALL_INPUT_PORTS
+              value: "8080"
             - name: FIREWALL_OUTBOUND_SUBNETS
               value: "10.42.0.0/16,10.43.0.0/16"
             - name: TZ
@@ -97,3 +99,4 @@ spec:
           nfs:
             server: 10.10.10.10
             path: /mnt/user/Media
+
