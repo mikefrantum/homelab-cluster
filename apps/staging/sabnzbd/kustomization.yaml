@@ -3,6 +3,6 @@ kind: Kustomization
 namespace: media
 resources:
   - ../../base/sabnzbd
-  - secret.yaml
+  - gluetun-secret.yaml
   - cloudflare.yaml
   - cloudflare-secret.yaml

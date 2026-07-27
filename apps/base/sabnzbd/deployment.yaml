@@ -13,7 +13,6 @@ spec:
       labels:
         app: sabnzbd
     spec:
-      serviceAccountName: tailscale-sabnzbd
       initContainers:
         - name: sysctls
           image: busybox:1.36
@@ -23,38 +22,51 @@ spec:
             - sh
             - -c
             - |
-              sysctl -w net.ipv4.ip_forward=1
-              sysctl -w net.ipv6.conf.all.forwarding=1
+              sysctl -w net.ipv4.conf.all.src_valid_mark=1
       containers:
-        # --- Tailscale sidecar (routes all pod traffic via exit node) ---
-        - name: tailscale
-          image: ghcr.io/tailscale/tailscale:v1.82.5
-          env:
-            - name: TS_AUTHKEY
-              valueFrom:
-                secretKeyRef:
-                  name: tailscale-sabnzbd-auth
-                  key: TS_AUTHKEY
-            - name: TS_KUBE_SECRET
-              value: tailscale-sabnzbd-state
-            - name: TS_USERSPACE
-              value: "false"
-            - name: TS_ACCEPT_DNS
-              value: "true"
-            # Route all traffic through the k8s exit node
-            - name: TS_EXTRA_ARGS
-              value: "--exit-node=100.74.25.108 --exit-node-allow-lan-access=true"
-            - name: TS_STATE_DIR
-              value: /var/lib/tailscale
+        # --- Gluetun VPN sidecar ---
+        - name: gluetun
+          image: qmcgaw/gluetun:v3.40.0
           securityContext:
             capabilities:
               add:
                 - NET_ADMIN
-          volumeMounts:
-            - name: tailscale-state
-              mountPath: /var/lib/tailscale
-            - name: dev-tun
-              mountPath: /dev/net/tun
+          env:
+            - name: VPN_SERVICE_PROVIDER
+              value: "protonvpn"
+            - name: VPN_TYPE
+              value: "wireguard"
+            - name: WIREGUARD_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gluetun-secret
+                  key: WIREGUARD_PRIVATE_KEY
+            - name: WIREGUARD_ADDRESSES
+              valueFrom:
+                secretKeyRef:
+                  name: gluetun-secret
+                  key: WIREGUARD_ADDRESSES
+            - name: SERVER_COUNTRIES
+              value: "United States"
+            - name: SERVER_HOSTNAMES
+              value: "node-us-200.protonvpn.net"
+            - name: WIREGUARD_PUBLIC_KEY
+              value: "4PtkYaXbBabB3UgB6KHUtaBvJrggreOOXfmhKKUfEg0="
+            - name: WIREGUARD_ENDPOINT_IP
+              value: "198.44.139.75"
+            - name: WIREGUARD_ENDPOINT_PORT
+              value: "51820"
+            - name: FIREWALL_OUTBOUND_SUBNETS
+              value: "10.42.0.0/16,10.43.0.0/16"
+            - name: TZ
+              value: "America/Denver"
+          ports:
+            - containerPort: 8888
+              protocol: TCP
+              name: http-proxy
+            - containerPort: 8080
+              protocol: TCP
+              name: sabnzbd
 
         # --- SABnzbd ---
         - name: sabnzbd
@@ -78,12 +90,6 @@ spec:
               mountPath: /media
 
       volumes:
-        - name: tailscale-state
-          persistentVolumeClaim:
-            claimName: tailscale-sabnzbd-state
-        - name: dev-tun
-          hostPath:
-            path: /dev/net/tun
         - name: config
           persistentVolumeClaim:
             claimName: sabnzbd-config
