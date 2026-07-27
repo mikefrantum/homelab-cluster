@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tailscale-exit
+  namespace: tailscale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tailscale-exit
+  template:
+    metadata:
+      labels:
+        app: tailscale-exit
+    spec:
+      serviceAccountName: tailscale
+      initContainers:
+        - name: sysctls
+          image: busybox:1.36
+          securityContext:
+            privileged: true
+          command:
+            - sh
+            - -c
+            - |
+              sysctl -w net.ipv4.ip_forward=1
+              sysctl -w net.ipv6.conf.all.forwarding=1
+      containers:
+        - name: tailscale
+          image: ghcr.io/tailscale/tailscale:v1.82.5
+          env:
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-auth
+                  key: TS_AUTHKEY
+            - name: TS_KUBE_SECRET
+              value: tailscale-state
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_ACCEPT_DNS
+              value: "true"
+            - name: TS_EXTRA_ARGS
+              value: "--advertise-exit-node"
+            - name: TS_STATE_DIR
+              value: /var/lib/tailscale
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          volumeMounts:
+            - name: tailscale-state
+              mountPath: /var/lib/tailscale
+            - name: dev-tun
+              mountPath: /dev/net/tun
+      volumes:
+        - name: tailscale-state
+          persistentVolumeClaim:
+            claimName: tailscale-exit-state
+        - name: dev-tun
+          hostPath:
+            path: /dev/net/tun
