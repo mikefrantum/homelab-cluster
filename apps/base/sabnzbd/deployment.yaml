@@ -43,7 +43,7 @@ spec:
               value: "true"
             # Route all traffic through the k8s exit node
             - name: TS_EXTRA_ARGS
-              value: "--exit-node=tailscale-exit --exit-node-allow-lan-access=true"
+              value: "--exit-node=100.74.25.108 --exit-node-allow-lan-access=true"
             - name: TS_STATE_DIR
               value: /var/lib/tailscale
           securityContext:
