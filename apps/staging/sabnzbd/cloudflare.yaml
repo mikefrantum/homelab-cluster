@@ -50,11 +50,11 @@ metadata:
   namespace: media
 data:
   config.yaml: |
-    tunnel: REPLACE_WITH_TUNNEL_NAME
+    tunnel: sab
     credentials-file: /etc/cloudflared/creds/credentials.json
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-      - hostname: sab.nohermosa.com
+      - hostname: sabnzb.nohermosa.com
         service: http://sabnzbd.media.svc.cluster.local:8080
       - service: http_status:404
