@@ -17,7 +17,7 @@ spec:
         kubernetes.io/hostname: server2
       initContainers:
         - name: sysctls
-          image: busybox:1.36
+          image: busybox:1.38
           securityContext:
             privileged: true
           command:

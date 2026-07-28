@@ -16,7 +16,7 @@ spec:
       serviceAccountName: tailscale
       initContainers:
         - name: sysctls
-          image: busybox:1.36
+          image: busybox:1.38
           securityContext:
             privileged: true
           command:
