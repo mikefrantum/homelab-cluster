@@ -27,7 +27,7 @@ spec:
               sysctl -w net.ipv6.conf.all.forwarding=1
       containers:
         - name: tailscale
-          image: ghcr.io/tailscale/tailscale:v1.82.5
+          image: ghcr.io/tailscale/tailscale:v1.98.10
           env:
             - name: TS_AUTHKEY
               valueFrom:
