@@ -76,6 +76,8 @@ spec:
               value: "100"
             - name: TZ
               value: "America/Denver"
+            - name: HOST_WHITELIST_ENTRIES
+              value: "sabnzb.nohermosa.com"
           ports:
             - containerPort: 8080
               protocol: TCP
