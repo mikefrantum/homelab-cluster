@@ -6,3 +6,4 @@ resources:
   - gluetun-secret.yaml
   - cloudflare.yaml
   - cloudflare-secret.yaml
+  - ingress.yaml
