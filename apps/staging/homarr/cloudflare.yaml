@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared-homarr
+  namespace: media
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cloudflared-homarr
+  template:
+    metadata:
+      labels:
+        app: cloudflared-homarr
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:2026.7.2
+          args:
+            - tunnel
+            - --config
+            - /etc/cloudflared/config/config.yaml
+            - run
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /etc/cloudflared/config
+              readOnly: true
+            - name: creds
+              mountPath: /etc/cloudflared/creds
+              readOnly: true
+      volumes:
+        - name: creds
+          secret:
+            secretName: homarr-tunnel-credentials
+        - name: config
+          configMap:
+            name: cloudflared-homarr
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-homarr
+  namespace: media
+data:
+  config.yaml: |
+    tunnel: homarr 
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    metrics: 0.0.0.0:2000
+    no-autoupdate: true
+    ingress:
+      - hostname: homarr.nohermosa.com
+        service: http://homarr.media.svc.cluster.local:7575
+      - service: http_status:404
