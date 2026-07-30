@@ -4,5 +4,5 @@ resources:
   - ../../base/homarr
   - ingress.yaml
   - cloudflare.yaml
-  - cloudflare-secret.enc.yaml
+  - cloudflare-secret.yaml
   - secret.enc.yaml
