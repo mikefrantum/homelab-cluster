@@ -41,8 +41,6 @@ spec:
               value: "false"
             - name: TS_ACCEPT_DNS
               value: "true"
-            - name: TS_EXTRA_ARGS
-              value: "--advertise-exit-node"
             - name: TS_STATE_DIR
               value: /var/lib/tailscale
           securityContext:
