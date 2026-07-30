@@ -19,11 +19,11 @@ spec:
         - name: homarr
           image: ghcr.io/homarr-labs/homarr:v1.72.0
           env:
-            - name: AUTH_SECRET
+            - name: SECRET_ENCRYPTION_KEY 
               valueFrom:
                 secretKeyRef:
                   name: homarr-secret
-                  key: AUTH_SECRET
+                  key: SECRET_ENCRYPTION_KEY
           ports:
             - containerPort: 7575
           volumeMounts:
