@@ -23,7 +23,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: homarr-secret
+<<<<<<< HEAD
                   key: SECRET_ENCRYPTION_KEY
+=======
+                  key: SECRET_ENCRYPTION_KEY 
+>>>>>>> b009cc7 (feat: vikunja deployment)
           ports:
             - containerPort: 7575
           volumeMounts:
