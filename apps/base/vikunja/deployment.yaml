@@ -32,6 +32,8 @@ spec:
               value: "sqlite"
             - name: VIKUNJA_DATABASE_PATH
               value: "/app/vikunja/files/vikunja.db"
+            - name: VIKUNJA_SERVICE_ENABLEREGISTRATION
+              value: "false"
           ports:
             - containerPort: 3456
           volumeMounts:
