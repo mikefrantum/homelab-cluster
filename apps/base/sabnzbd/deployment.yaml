@@ -64,6 +64,10 @@ spec:
               value: "10.42.0.0/16,10.43.0.0/16"
             - name: TZ
               value: "America/Denver"
+            - name: HEALTH_TARGET_ADDRESS
+              value: "1.1.1.1:443"
+            - name: HEALTH_VPN_DURATION_INITIAL
+              value: "30s"
           ports:
             - containerPort: 8888
               protocol: TCP
@@ -71,6 +75,13 @@ spec:
             - containerPort: 8080
               protocol: TCP
               name: sabnzbd
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9999
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 2
 
         # --- SABnzbd ---
         - name: sabnzbd
