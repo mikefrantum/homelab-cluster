@@ -72,9 +72,11 @@ spec:
               protocol: TCP
               name: sabnzbd
           livenessProbe:
-            httpGet:
-              path: /
-              port: 9999
+            exec:
+              command:
+                - wget
+                - -qO-
+                - http://127.0.0.1:9999
             initialDelaySeconds: 90
             periodSeconds: 30
             failureThreshold: 5
