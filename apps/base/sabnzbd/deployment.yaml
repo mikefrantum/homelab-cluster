@@ -79,9 +79,10 @@ spec:
             httpGet:
               path: /
               port: 9999
-            initialDelaySeconds: 30
-            periodSeconds: 15
-            failureThreshold: 2
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            failureThreshold: 5
+            timeoutSeconds: 10
 
         # --- SABnzbd ---
         - name: sabnzbd
