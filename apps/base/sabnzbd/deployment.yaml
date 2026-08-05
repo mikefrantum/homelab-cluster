@@ -38,6 +38,8 @@ spec:
               value: "wg0"
             - name: BLOCK_IPV6
               value: "on"
+            - name: DNS_UPSTREAM_IPV6
+              value: "off"
             - name: DOT
               value: "off"
             - name: VPN_SERVICE_PROVIDER
