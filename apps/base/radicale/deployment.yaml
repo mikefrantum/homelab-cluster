@@ -33,7 +33,7 @@ spec:
             - name: RADICALE_CONFIG_AUTH_TYPE
               value: "htpasswd"
             - name: RADICALE_CONFIG_AUTH_HTPASSWD_FILENAME
-              value: "/data/users"
+              value: "/secrets/users"
             - name: RADICALE_CONFIG_AUTH_HTPASSWD_ENCRYPTION
               value: "bcrypt"
           ports:
@@ -42,7 +42,7 @@ spec:
             - name: data
               mountPath: /data
             - name: htpasswd
-              mountPath: /data/users
+              mountPath: /secrets/users
               subPath: users
               readOnly: true
       volumes:
