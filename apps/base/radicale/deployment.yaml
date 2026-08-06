@@ -41,7 +41,15 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: htpasswd
+              mountPath: /data/users
+              subPath: users
+              readOnly: true
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: radicale-data
+        - name: htpasswd
+          secret:
+            secretName: radicale-htpasswd
+
