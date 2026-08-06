@@ -6,3 +6,4 @@ resources:
   - ingress.yaml
   - cloudflare.yaml
   - cloudflare-secret.yaml
+  - htpasswd-secret.yaml
