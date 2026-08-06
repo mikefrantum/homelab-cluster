@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radicale
+  namespace: radicale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radicale
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: radicale
+    spec:
+      # NOTE: tomsquest/docker-radicale runs as its own internal user and
+      # self-chowns /data on startup (see project README, "Custom User/Group
+      # ID for the data volume"). Because of that chown-on-startup behavior,
+      # we do NOT set a securityContext with a fixed PUID/PGID here the way
+      # we did for linkding (33) or jellyseerr/seerr (1000) -- letting the
+      # container manage its own /data ownership is the documented,
+      # supported path for this image.
+      containers:
+        - name: radicale
+          image: tomsquest/docker-radicale:3.7.6.0
+          env:
+            - name: RADICALE_CONFIG_SERVER_HOSTS
+              value: "0.0.0.0:5232"
+            - name: RADICALE_CONFIG_STORAGE_FILESYSTEM_FOLDER
+              value: "/data/collections"
+            - name: RADICALE_CONFIG_AUTH_TYPE
+              value: "htpasswd"
+            - name: RADICALE_CONFIG_AUTH_HTPASSWD_FILENAME
+              value: "/data/users"
+            - name: RADICALE_CONFIG_AUTH_HTPASSWD_ENCRYPTION
+              value: "bcrypt"
+          ports:
+            - containerPort: 5232
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: radicale-data
