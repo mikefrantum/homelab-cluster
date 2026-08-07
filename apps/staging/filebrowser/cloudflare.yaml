@@ -55,6 +55,6 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-      - hostname: filebrowser.nohermosa.com
+      - hostname: filebrowser.zoomzoom.design
         service: http://filebrowser.filebrowser.svc.cluster.local:80
       - service: http_status:404
