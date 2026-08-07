@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebrowser
+  namespace: filebrowser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filebrowser
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: filebrowser
+    spec:
+      # gtsteffaniak/filebrowser (Quantum) runs as a built-in non-root
+      # user "filebrowser" (UID:GID 1000:1000) on v1.3+ images.
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: filebrowser
+          image: ghcr.io/gtsteffaniak/filebrowser:stable
+          env:
+            # Config lives OUTSIDE /home/filebrowser/data (mounted from a
+            # ConfigMap below) rather than inside it as a subPath file --
+            # avoids the same class of chown-vs-mounted-file conflict we
+            # hit on Radicale. See homelab-app-deployment skill:
+            # references/secrets-and-mount-pitfalls.md
+            - name: FILEBROWSER_CONFIG
+              value: "/config/config.yaml"
+            - name: FILEBROWSER_DATABASE_PATH
+              value: "/home/filebrowser/data/filebrowser.sqlite"
+            - name: FILEBROWSER_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: filebrowser-secret
+                  key: FILEBROWSER_ADMIN_PASSWORD
+            - name: TZ
+              value: "America/Denver"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: data
+              mountPath: /home/filebrowser/data
+            - name: folder
+              mountPath: /folder
+      volumes:
+        - name: config
+          configMap:
+            name: filebrowser-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: filebrowser-data
+        - name: folder
+          nfs:
+            server: 10.10.10.10
+            path: /mnt/user/client-files
