@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncthing
+  namespace: syncthing
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: syncthing
+  template:
+    metadata:
+      labels:
+        app: syncthing
+    spec:
+      # Pinned to server2 for now, matching the SABnzbd/qBittorrent pattern --
+      # single-node cluster so this doesn't matter much yet, but keeps future
+      # placement predictable once server1 rejoins with fewer taints.
+      nodeSelector:
+        kubernetes.io/hostname: server2
+      containers:
+        - name: syncthing
+          image: lscr.io/linuxserver/syncthing:1.29.4
+          env:
+            - name: PUID
+              value: "99"
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: "America/Denver"
+          ports:
+            - name: gui
+              containerPort: 8384
+            - name: sync-tcp
+              containerPort: 22000
+              protocol: TCP
+            - name: sync-udp
+              containerPort: 22000
+              protocol: UDP
+            - name: discovery
+              containerPort: 21027
+              protocol: UDP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          # No data folders mounted yet -- Mike will wire in NFS mounts for
+          # MikeDrive/Files and client-files once Unraid is decommissioned
+          # and the real migration happens. See homelab-app-deployment skill,
+          # references/arr-stack.md "Unraid -> Ubuntu migration notes" for
+          # the pattern used by every other app with direct NFS mounts.
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: syncthing-config

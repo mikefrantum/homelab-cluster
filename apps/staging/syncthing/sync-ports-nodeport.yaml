@@ -1,0 +1,33 @@
+# Exposes Syncthing's actual sync protocol + local discovery ports directly
+# on the node, so other devices (desktop, laptop, phone, tablet) can reach
+# them over Tailscale -- Cloudflare Tunnel only proxies HTTP cleanly and is
+# the wrong tool for the sync/discovery protocols.
+#
+# Pod is pinned to server2 (nodeSelector in base/deployment.yaml), which has
+# a stable Tailscale IP -- connect other Syncthing devices to that IP on
+# these ports once real folders are wired in.
+apiVersion: v1
+kind: Service
+metadata:
+  name: syncthing-sync-ports
+  namespace: syncthing
+spec:
+  type: NodePort
+  selector:
+    app: syncthing
+  ports:
+    - name: sync-tcp
+      port: 22000
+      targetPort: 22000
+      nodePort: 32200
+      protocol: TCP
+    - name: sync-udp
+      port: 22000
+      targetPort: 22000
+      nodePort: 32200
+      protocol: UDP
+    - name: discovery
+      port: 21027
+      targetPort: 21027
+      nodePort: 32101
+      protocol: UDP
