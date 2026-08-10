@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: syncthing
   namespace: syncthing
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   ingressClassName: traefik
   rules:
