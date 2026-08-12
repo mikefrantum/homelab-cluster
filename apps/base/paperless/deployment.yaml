@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless
+  namespace: paperless
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: paperless
+  template:
+    metadata:
+      labels:
+        app: paperless
+    spec:
+      containers:
+        - name: paperless
+          image: ghcr.io/paperless-ngx/paperless-ngx:latest
+          env:
+            - name: PAPERLESS_REDIS
+              value: "redis://paperless-redis:6379"
+            - name: PAPERLESS_DBHOST
+              value: "paperless-postgres"
+            - name: PAPERLESS_DBNAME
+              value: "paperless"
+            - name: PAPERLESS_DBUSER
+              value: "paperless"
+            - name: PAPERLESS_DBPASS
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-secret
+                  key: PAPERLESS_DBPASS
+            - name: PAPERLESS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-secret
+                  key: PAPERLESS_SECRET_KEY
+            - name: PAPERLESS_ADMIN_USER
+              value: "admin"
+            - name: PAPERLESS_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-secret
+                  key: PAPERLESS_ADMIN_PASSWORD
+            - name: PAPERLESS_ADMIN_MAIL
+              value: "mike@nohermosa.com"
+            - name: PAPERLESS_OCR_LANGUAGE
+              value: "eng"
+            - name: PAPERLESS_OCR_MODE
+              value: "skip"
+            - name: PAPERLESS_TIME_ZONE
+              value: "America/Denver"
+            - name: PAPERLESS_URL
+              value: "https://paperless.nohermosa.com"
+            - name: PAPERLESS_TASK_WORKERS
+              value: "2"
+            - name: PAPERLESS_THREADS_PER_WORKER
+              value: "2"
+            - name: PAPERLESS_FILENAME_FORMAT
+              value: "{created_year}/{correspondent}/{title}"
+            - name: PAPERLESS_TIKA_ENABLED
+              value: "1"
+            - name: PAPERLESS_TIKA_GOTENBERG_ENDPOINT
+              value: "http://paperless-gotenberg:3000"
+            - name: PAPERLESS_TIKA_ENDPOINT
+              value: "http://paperless-tika:9998"
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: data
+              mountPath: /usr/src/paperless/data
+            - name: media
+              mountPath: /usr/src/paperless/media
+            - name: export
+              mountPath: /usr/src/paperless/export
+            - name: consume
+              mountPath: /usr/src/paperless/consume
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: paperless-data
+        - name: media
+          persistentVolumeClaim:
+            claimName: paperless-media
+        - name: export
+          persistentVolumeClaim:
+            claimName: paperless-export
+        - name: consume
+          persistentVolumeClaim:
+            claimName: paperless-consume
