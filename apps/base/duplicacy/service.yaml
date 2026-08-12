@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: duplicacy
+  namespace: duplicacy
+spec:
+  selector:
+    app: duplicacy
+  ports:
+    - name: http
+      port: 3875
+      targetPort: 3875
+      protocol: TCP

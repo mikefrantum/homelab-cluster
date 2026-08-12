@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: duplicacy
+  namespace: duplicacy
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: duplicacy
+  template:
+    metadata:
+      labels:
+        app: duplicacy
+    spec:
+      # Duplicacy requests its license/machine-id based on hostname + a
+      # machine-id persisted in /config -- keep this hostname stable across
+      # redeploys, don't let it float or the license binding breaks.
+      hostname: duplicacy-k8s
+      containers:
+        - name: duplicacy
+          image: saspus/duplicacy-web:v1.8.3
+          env:
+            - name: USR_ID
+              value: "99"
+            - name: GRP_ID
+              value: "100"
+            - name: TZ
+              value: "America/Denver"
+          ports:
+            - containerPort: 3875
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: logs
+              mountPath: /logs
+            - name: cache
+              mountPath: /cache
+          # NOTE: no backup source volumes mounted yet (e.g. /backuproot).
+          # Mike wants this installed and running first -- NFS mounts for
+          # actual data to back up get wired in later. See
+          # homelab-app-deployment skill references/arr-stack.md for the
+          # direct-NFS-mount pattern used by every other app once ready.
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: duplicacy-config
+        - name: logs
+          persistentVolumeClaim:
+            claimName: duplicacy-logs
+        - name: cache
+          persistentVolumeClaim:
+            claimName: duplicacy-cache
