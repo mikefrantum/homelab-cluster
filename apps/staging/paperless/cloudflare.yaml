@@ -56,5 +56,5 @@ data:
     no-autoupdate: true
     ingress:
       - hostname: paperless.nohermosa.com
-        service: http://paperless.paperless.svc.cluster.local:8000
+        service: http://paperless-web.paperless.svc.cluster.local:8000
       - service: http_status:404
