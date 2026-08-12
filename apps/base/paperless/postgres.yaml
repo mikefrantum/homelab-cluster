@@ -28,6 +28,12 @@ spec:
                 secretKeyRef:
                   name: paperless-secret
                   key: PAPERLESS_DBPASS
+            # Postgres refuses to initdb directly at a volume's mount root
+            # if it contains filesystem artifacts like lost+found (common on
+            # freshly-provisioned block volumes, incl. Longhorn). Point PGDATA
+            # at a subdirectory of the mount instead, per Postgres's own hint.
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           ports:
             - containerPort: 5432
           volumeMounts:
