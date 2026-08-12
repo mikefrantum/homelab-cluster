@@ -46,6 +46,15 @@ spec:
                   key: PAPERLESS_ADMIN_PASSWORD
             - name: PAPERLESS_ADMIN_MAIL
               value: "mike@nohermosa.com"
+            # Matches Mike's Unraid NFS convention (nobody:users). paperless-ngx's
+            # entrypoint tries to chown every mounted volume to its internal
+            # user on startup; NFS root_squash denies that chown for a
+            # container user it doesn't recognize. Running AS that uid/gid
+            # from the start avoids the chown entirely instead of fighting it.
+            - name: USERMAP_UID
+              value: "99"
+            - name: USERMAP_GID
+              value: "100"
             - name: PAPERLESS_OCR_LANGUAGE
               value: "eng"
             - name: PAPERLESS_OCR_MODE
