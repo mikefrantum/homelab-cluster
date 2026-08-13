@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:latest
+          env:
+            - name: PUID
+              value: "99"
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: "America/Denver"
+          ports:
+            - containerPort: 8096
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          # No media library mounted yet -- Mike's Unraid box will eventually
+          # be replaced by a dedicated Ubuntu server (RTX 2060, NVENC) that
+          # hosts NFS + GPU transcoding for Jellyfin/Plex/Tdarr. Real media
+          # volumes get wired in once that host exists. For now this is
+          # config-only, matching the Duplicacy/Syncthing pattern.
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
