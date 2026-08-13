@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: plex
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+        - name: plex
+          image: lscr.io/linuxserver/plex:latest
+          env:
+            - name: PUID
+              value: "99"
+            - name: PGID
+              value: "100"
+            - name: TZ
+              value: "America/Denver"
+            - name: VERSION
+              value: "docker"
+            # PLEX_CLAIM is optional and only used on first boot -- get a
+            # fresh token from https://plex.tv/claim (expires ~4 min), set
+            # it here, deploy, then it's safe to remove afterward.
+            - name: PLEX_CLAIM
+              value: "claim-5QHoVqrMetaQaad_Tz4s"
+          ports:
+            - containerPort: 32400
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          # No media library mounted yet -- same as Jellyfin, waiting on the
+          # future Ubuntu server (RTX 2060, NVENC) to host real NFS shares.
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: plex-config
