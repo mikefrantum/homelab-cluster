@@ -6,3 +6,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - pvc.yaml
+  - php-uploads.yaml
+patchesStrategicMerge:
+  - php-uploads-patch.yaml
