@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+spec:
+  template:
+    spec:
+      containers:
+        - name: wordpress
+          volumeMounts:
+            - name: php-uploads
+              mountPath: /usr/local/etc/php/conf.d/uploads.ini
+              subPath: uploads.ini
+      volumes:
+        - name: php-uploads
+          configMap:
+            name: wordpress-php-uploads
