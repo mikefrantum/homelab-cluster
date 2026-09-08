@@ -24,7 +24,7 @@ spec:
       # supported path for this image.
       containers:
         - name: radicale
-          image: tomsquest/docker-radicale:3.7.6.0
+          image: tomsquest/docker-radicale:3.8.0.0
           env:
             - name: RADICALE_CONFIG_SERVER_HOSTS
               value: "0.0.0.0:5232"
