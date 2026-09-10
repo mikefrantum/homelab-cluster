@@ -5,13 +5,19 @@
       "\\.yaml$"
     ]
   },
+  "flux": {
+    "fileMatch": [
+      "\\.yaml$"
+    ]
+  },
   "packageRules": [
     {
-      "matchPackageNames": ["wordpress"],
+      "matchPackageNames": [
+        "wordpress"
+      ],
       "prBodyNotes": [
-        "⚠️ **After merging:** Run the WordPress DB upgrade at `https://zoomzoom.design/wp-admin/upgrade.php`"
+        "⚠️ After merging: Run the WordPress DB upgrade at https://zoomzoom.design/wp-admin/upgrade.php"
       ]
     }
   ]
 }
-
