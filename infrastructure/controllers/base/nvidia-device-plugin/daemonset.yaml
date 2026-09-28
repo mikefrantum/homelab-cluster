@@ -14,6 +14,7 @@ spec:
       labels:
         name: nvidia-device-plugin-ds
     spec:
+      runtimeClassName: nvidia   # required so the plugin container can see the GPU via NVML
       nodeSelector:
         kubernetes.io/hostname: server0   # only server0 has the GPU
       tolerations:
@@ -22,7 +23,7 @@ spec:
           effect: NoSchedule
       priorityClassName: system-node-critical
       containers:
-        - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.1   # pin version — check github.com/NVIDIA/k8s-device-plugin/releases for current
+        - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.1
           name: nvidia-device-plugin-ctr
           env:
             - name: FAIL_ON_INIT_ERROR

@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: kube-system
 resources:
   - daemonset.yaml
+  - runtimeclass.yaml
