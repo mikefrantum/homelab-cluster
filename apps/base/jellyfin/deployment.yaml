@@ -4,7 +4,7 @@ metadata:
   name: jellyfin
   namespace: jellyfin
 spec:
-  replicas: 1
+  replicas: 0   # paused -- freeing the GPU for Plex until time-slicing is set up (Plex/Jellyfin/Tdarr will share)
   strategy:
     type: Recreate
   selector:
