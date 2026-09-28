@@ -4,3 +4,4 @@ namespace: kube-system
 resources:
   - daemonset.yaml
   - runtimeclass.yaml
+  - time-slicing-config.yaml

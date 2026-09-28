@@ -28,6 +28,8 @@ spec:
           env:
             - name: FAIL_ON_INIT_ERROR
               value: "false"
+          args:
+            - "--config-file=/etc/nvidia/config/time-slicing.yaml"
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -35,7 +37,12 @@ spec:
           volumeMounts:
             - name: device-plugin
               mountPath: /var/lib/kubelet/device-plugins
+            - name: config
+              mountPath: /etc/nvidia/config
       volumes:
         - name: device-plugin
           hostPath:
             path: /var/lib/kubelet/device-plugins
+        - name: config
+          configMap:
+            name: nvidia-device-plugin-config
