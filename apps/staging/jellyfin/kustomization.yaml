@@ -4,3 +4,5 @@ namespace: jellyfin
 resources:
   - ../../base/jellyfin
   - ingress.yaml
+  - cloudflare.yaml
+  - cloudflare-secret.yaml
