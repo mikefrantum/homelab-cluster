@@ -4,7 +4,7 @@ metadata:
   name: jellyfin
   namespace: jellyfin
 spec:
-  replicas: 0   # paused -- freeing the GPU for Plex until time-slicing is set up (Plex/Jellyfin/Tdarr will share)
+  replicas: 1
   strategy:
     type: Recreate
   selector:
@@ -15,9 +15,9 @@ spec:
       labels:
         app: jellyfin
     spec:
-      runtimeClassName: nvidia   # required so the container can see the GPU via NVML
+      runtimeClassName: nvidia # required so the container can see the GPU via NVML
       nodeSelector:
-        kubernetes.io/hostname: server0   # GPU + local media mount both live here
+        kubernetes.io/hostname: server0 # GPU + local media mount both live here
       containers:
         - name: jellyfin
           image: lscr.io/linuxserver/jellyfin:latest
