@@ -15,6 +15,9 @@ spec:
       labels:
         app: jellyfin
     spec:
+      runtimeClassName: nvidia   # required so the container can see the GPU via NVML
+      nodeSelector:
+        kubernetes.io/hostname: server0   # GPU + local media mount both live here
       containers:
         - name: jellyfin
           image: lscr.io/linuxserver/jellyfin:latest
@@ -25,17 +28,26 @@ spec:
               value: "100"
             - name: TZ
               value: "America/Denver"
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "all"
           ports:
             - containerPort: 8096
+          resources:
+            limits:
+              nvidia.com/gpu: 1
           volumeMounts:
             - name: config
               mountPath: /config
-          # No media library mounted yet -- Mike's Unraid box will eventually
-          # be replaced by a dedicated Ubuntu server (RTX 2060, NVENC) that
-          # hosts NFS + GPU transcoding for Jellyfin/Plex/Tdarr. Real media
-          # volumes get wired in once that host exists. For now this is
-          # config-only, matching the Duplicacy/Syncthing pattern.
+            - name: media
+              mountPath: /media
+              readOnly: true
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: jellyfin-config
+        - name: media
+          hostPath:
+            path: /mnt/media/Media
+            type: Directory

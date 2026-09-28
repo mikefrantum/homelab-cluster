@@ -15,6 +15,9 @@ spec:
       labels:
         app: plex
     spec:
+      runtimeClassName: nvidia   # required so the container can see the GPU via NVML
+      nodeSelector:
+        kubernetes.io/hostname: server0   # GPU + local media mount both live here
       containers:
         - name: plex
           image: lscr.io/linuxserver/plex:latest
@@ -27,19 +30,31 @@ spec:
               value: "America/Denver"
             - name: VERSION
               value: "docker"
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "all"
             # PLEX_CLAIM is optional and only used on first boot -- get a
             # fresh token from https://plex.tv/claim (expires ~4 min), set
             # it here, deploy, then it's safe to remove afterward.
             - name: PLEX_CLAIM
-              value: "claim-5QHoVqrMetaQaad_Tz4s"
+              value: "REPLACE_WITH_CLAIM_TOKEN_OR_REMOVE_AFTER_FIRST_BOOT"
           ports:
             - containerPort: 32400
+          resources:
+            limits:
+              nvidia.com/gpu: 1
           volumeMounts:
             - name: config
               mountPath: /config
-          # No media library mounted yet -- same as Jellyfin, waiting on the
-          # future Ubuntu server (RTX 2060, NVENC) to host real NFS shares.
+            - name: media
+              mountPath: /media
+              readOnly: true
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: plex-config
+        - name: media
+          hostPath:
+            path: /mnt/media/Media
+            type: Directory
