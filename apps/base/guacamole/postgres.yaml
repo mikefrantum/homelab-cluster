@@ -44,8 +44,7 @@ spec:
             - containerPort: 5432
           volumeMounts:
             - name: data
-              mountPath: /var/lib/postgresql/data
-              subPath: pgdata   # avoid "lost+found" dir issue on a fresh ext4-backed volume
+              mountPath: /var/lib/postgresql
       volumes:
         - name: data
           persistentVolumeClaim:
