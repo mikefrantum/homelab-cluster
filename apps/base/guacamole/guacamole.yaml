@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guacamole-web
+  namespace: guacamole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guacamole-web
+  template:
+    metadata:
+      labels:
+        app: guacamole-web
+    spec:
+      containers:
+        - name: guacamole
+          image: guacamole/guacamole:1.6.0
+          env:
+            - name: GUACD_HOSTNAME
+              value: "guacd.guacamole.svc.cluster.local"
+            - name: GUACD_PORT
+              value: "4822"
+            - name: POSTGRESQL_HOSTNAME
+              value: "guacamole-postgres.guacamole.svc.cluster.local"
+            - name: POSTGRESQL_PORT
+              value: "5432"
+            - name: POSTGRESQL_DATABASE
+              value: "guacamole_db"
+            - name: POSTGRESQL_USERNAME
+              value: "guacamole_user"
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: guacamole-secret
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guacamole-web
+  namespace: guacamole
+spec:
+  selector:
+    app: guacamole-web
+  ports:
+    - port: 8080
+      targetPort: 8080

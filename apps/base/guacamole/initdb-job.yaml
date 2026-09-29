@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: guacamole-initdb
+  namespace: guacamole
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: initdb
+          image: guacamole/guacamole:1.6.0
+          command:
+            - sh
+            - -c
+            - |
+              apt-get update -qq && apt-get install -y -qq postgresql-client > /dev/null 2>&1
+              /opt/guacamole/bin/initdb.sh --postgresql > /tmp/initdb.sql
+              PGPASSWORD="$POSTGRESQL_PASSWORD" psql -h guacamole-postgres.guacamole.svc.cluster.local \
+                -U guacamole_user -d guacamole_db -f /tmp/initdb.sql
+          env:
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: guacamole-secret
+                  key: POSTGRES_PASSWORD
