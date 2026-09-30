@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rustdesk-data
+  namespace: rustdesk
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rustdesk
+  namespace: rustdesk
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: rustdesk
+  template:
+    metadata:
+      labels:
+        app: rustdesk
+    spec:
+      # hostNetwork required: RustDesk's ID-registration/heartbeat protocol runs over UDP,
+      # and k3s's normal pod networking (kube-proxy/iptables NAT) has known reliability
+      # problems forwarding UDP cleanly. Binding directly to the node's real interface
+      # sidesteps that entirely -- same reasoning as `--net=host` in RustDesk's own docs.
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/hostname: server2   # pin to one stable node -- hostNetwork ties this to a specific node's IP
+      containers:
+        - name: hbbs
+          image: rustdesk/rustdesk-server:latest
+          command: ["hbbs"]
+          volumeMounts:
+            - name: data
+              mountPath: /root
+        - name: hbbr
+          image: rustdesk/rustdesk-server:latest
+          command: ["hbbr"]
+          volumeMounts:
+            - name: data
+              mountPath: /root
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: rustdesk-data
