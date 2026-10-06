@@ -46,6 +46,12 @@ spec:
               value: "protonvpn"
             - name: VPN_TYPE
               value: "wireguard"
+            - name: BLOCK_MALICIOUS
+              value: "off"
+            - name: BLOCK_SURVEILLANCE
+              value: "off"
+            - name: BLOCK_ADS
+              value: "off"
             - name: WIREGUARD_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
@@ -119,4 +125,3 @@ spec:
           nfs:
             server: 10.10.10.10
             path: /mnt/user/Media
-
