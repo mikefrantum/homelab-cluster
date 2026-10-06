@@ -13,8 +13,7 @@ spec:
       storage: 10Gi
 ---
 # Shared drop folder. ReadWriteMany so Syncthing/other readers can also touch it.
-# Static PV pointing at existing data on Unraid (new IP 10.10.10.10 after network migration).
-# Data lives at: /mnt/user/k8s-volumes/hermes-hermes-shared
+# Static PV on server0: 10.10.10.14:/mnt/media/k8s-volumes/hermes-hermes-shared
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -26,9 +25,10 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: unraid-nfs
   mountOptions:
-    - nfsvers=4.2
+    - nfsvers=3
+    - proto=tcp
+    - mountproto=tcp
     - hard
-    - noresvport
     - timeo=600
     - retrans=2
   nfs:
