@@ -40,8 +40,8 @@ spec:
         external:
           enabled: true
           type: nfs
-          server: 10.10.10.10
-          path: /mnt/user/k8s-volumes/immich-immich-library/external
+          server: 10.10.10.14
+          path: /mnt/media/k8s-volumes/immich-immich-library/external
           globalMounts:
             - path: /external
 
