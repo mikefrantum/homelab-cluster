@@ -26,7 +26,6 @@ spec:
             - |
               sysctl -w net.ipv4.conf.all.src_valid_mark=1
       containers:
-        # --- Gluetun VPN sidecar ---
         - name: gluetun
           image: qmcgaw/gluetun:v3.41.3
           securityContext:
@@ -42,6 +41,8 @@ spec:
               value: "off"
             - name: DOT
               value: "off"
+            - name: DNS_ADDRESS
+              value: "1.1.1.1"
             - name: VPN_SERVICE_PROVIDER
               value: "protonvpn"
             - name: VPN_TYPE
@@ -62,8 +63,16 @@ spec:
                 secretKeyRef:
                   name: gluetun-secret
                   key: WIREGUARD_ADDRESSES
+            - name: WIREGUARD_MTU
+              value: "1320"
             - name: SERVER_COUNTRIES
               value: "United States"
+            - name: SERVER_CITIES
+              value: "Seattle"
+            - name: VPN_ENDPOINT_IP
+              value: "149.40.51.225"
+            - name: VPN_ENDPOINT_PORT
+              value: "51820"
             - name: PORT_FORWARD_ONLY
               value: "on"
             - name: FIREWALL_INPUT_PORTS
@@ -73,9 +82,6 @@ spec:
             - name: TZ
               value: "America/Denver"
           ports:
-            - containerPort: 8888
-              protocol: TCP
-              name: http-proxy
             - containerPort: 8080
               protocol: TCP
               name: sabnzbd
@@ -89,8 +95,6 @@ spec:
             periodSeconds: 30
             failureThreshold: 5
             timeoutSeconds: 10
-
-        # --- SABnzbd ---
         - name: sabnzbd
           image: lscr.io/linuxserver/sabnzbd:5.1.3
           env:
@@ -112,7 +116,6 @@ spec:
               mountPath: /downloads
             - name: media
               mountPath: /media
-
       volumes:
         - name: config
           persistentVolumeClaim:
