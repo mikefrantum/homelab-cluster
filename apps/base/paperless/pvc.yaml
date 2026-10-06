@@ -17,12 +17,11 @@ metadata:
   name: paperless-media
   namespace: paperless
 spec:
-  # Real stored documents -- backed by the unraid-nfs dynamic provisioner
-  # (Retain reclaim policy), auto-created under the k8s-volumes share as
-  # paperless-paperless-media, matching Mike's namespace-pvcname convention.
+  # Documents on server0 NFS, pinned to the existing volume.
   accessModes:
     - ReadWriteOnce
   storageClassName: unraid-nfs
+  volumeName: pvc-1092f69f-75b6-4a5c-b359-17114030b14f
   resources:
     requests:
       storage: 20Gi
@@ -46,11 +45,11 @@ metadata:
   name: paperless-consume
   namespace: paperless
 spec:
-  # Drop-folder for scanning new docs in -- also NFS so it's reachable from
-  # other devices/apps on the network, not just from inside the pod.
+  # Drop folder on server0 NFS, pinned to the existing volume.
   accessModes:
     - ReadWriteOnce
   storageClassName: unraid-nfs
+  volumeName: pvc-5b6909b0-122d-483a-b088-2d61e2c30d37
   resources:
     requests:
       storage: 5Gi
