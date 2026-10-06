@@ -4,6 +4,7 @@ metadata:
   name: immich-library
 spec:
   storageClassName: unraid-nfs
+  volumeName: pvc-b5819813-fd2f-455c-a79b-4d4fe215af52
   accessModes:
     - ReadWriteOnce
   resources:
