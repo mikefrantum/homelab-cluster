@@ -39,7 +39,7 @@ spec:
               value: "on"
             - name: DNS_UPSTREAM_IPV6
               value: "off"
-            - name: DOT
+            - name: DNS_SERVER
               value: "off"
             - name: DNS_ADDRESS
               value: "1.1.1.1"
@@ -69,10 +69,6 @@ spec:
               value: "United States"
             - name: SERVER_CITIES
               value: "Seattle"
-            - name: VPN_ENDPOINT_IP
-              value: "149.40.51.225"
-            - name: VPN_ENDPOINT_PORT
-              value: "51820"
             - name: PORT_FORWARD_ONLY
               value: "on"
             - name: FIREWALL_INPUT_PORTS
