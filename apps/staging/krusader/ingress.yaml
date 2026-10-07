@@ -1,8 +1,23 @@
+# Redirect the bare hostname to the noVNC page, auto-connecting and
+# resizing the remote desktop to fit the browser window.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: krusader-vnc-redirect
+  namespace: media-tools
+spec:
+  redirectRegex:
+    regex: ^(https?://[^/]+)/?$
+    replacement: ${1}/vnc.html?autoconnect=true&resize=remote
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: krusader
   namespace: media-tools
+  annotations:
+    # <namespace>-<middleware name>@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: media-tools-krusader-vnc-redirect@kubernetescrd
 spec:
   ingressClassName: traefik   # k3s default; change if you run a different controller
   rules:
