@@ -20,7 +20,7 @@ spec:
         kubernetes.io/hostname: server0 # GPU + local media mount both live here
       containers:
         - name: jellyfin
-          image: lscr.io/linuxserver/jellyfin:latest
+          image: lscr.io/linuxserver/jellyfin:12.2.20261005-225228
           env:
             - name: PUID
               value: "99"
@@ -49,5 +49,5 @@ spec:
             claimName: jellyfin-config
         - name: media
           hostPath:
-            path: /mnt/media/Media
+            path: /mnt/media
             type: Directory
