@@ -34,11 +34,13 @@ spec:
               value: "all"
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: "all"
+            - name: ADVERTISE_IP
+              value: "http://10.10.10.14:32400/"
             # PLEX_CLAIM is optional and only used on first boot -- get a
             # fresh token from https://plex.tv/claim (expires ~4 min), set
             # it here, deploy, then it's safe to remove afterward.
-            - name: PLEX_CLAIM
-              value: "claim-BAhzD1Mzg9YxtZQmuY-M"
+            #- name: PLEX_CLAIM
+            #  value: "claim-BAhzD1Mzg9YxtZQmuY-M"
           ports:
             - containerPort: 32400
               hostPort: 32400
