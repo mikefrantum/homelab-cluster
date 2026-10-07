@@ -41,6 +41,8 @@ spec:
               value: "REPLACE_WITH_CLAIM_TOKEN_OR_REMOVE_AFTER_FIRST_BOOT"
           ports:
             - containerPort: 32400
+              hostPort: 32400
+              protocol: TCP
           resources:
             limits:
               nvidia.com/gpu: 1
