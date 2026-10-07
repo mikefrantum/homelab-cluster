@@ -38,7 +38,7 @@ spec:
             # fresh token from https://plex.tv/claim (expires ~4 min), set
             # it here, deploy, then it's safe to remove afterward.
             - name: PLEX_CLAIM
-              value: "REPLACE_WITH_CLAIM_TOKEN_OR_REMOVE_AFTER_FIRST_BOOT"
+              value: "claim-8yatASVhXCXMpzMdMqm4"
           ports:
             - containerPort: 32400
               hostPort: 32400
