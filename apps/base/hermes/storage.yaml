@@ -13,7 +13,6 @@ spec:
       storage: 10Gi
 ---
 # Shared drop folder. ReadWriteMany so Syncthing/other readers can also touch it.
-# Static PV on server0: 10.10.10.14:/mnt/media/k8s-volumes/hermes-hermes-shared
 apiVersion: v1
 kind: PersistentVolume
 metadata:
