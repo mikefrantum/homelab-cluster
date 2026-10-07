@@ -20,9 +20,11 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       nodeSelector:
         kubernetes.io/hostname: server0
+      # Give Plex time to flush its database cleanly on shutdown/upgrade
+      terminationGracePeriodSeconds: 60
       containers:
         - name: plex
-          image: lscr.io/linuxserver/plex:latest
+          image: lscr.io/linuxserver/plex:1.43.4.10903-e5521bd8c-ls327
           env:
             - name: PUID
               value: "99"
@@ -36,8 +38,8 @@ spec:
               value: "all"
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: "all"
-            - name: ADVERTISE_IP
-              value: "http://10.10.10.14:32400/"
+            # Advertised URLs are set in Plex itself:
+            # Settings -> Network -> Custom server access URLs
             # PLEX_CLAIM is only used on first boot. Get a fresh token from
             # https://plex.tv/claim (expires ~4 min), set it, deploy, then remove it.
             #- name: PLEX_CLAIM
@@ -46,8 +48,30 @@ spec:
             - containerPort: 32400
               protocol: TCP
           resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
             limits:
               nvidia.com/gpu: 1
+          startupProbe:
+            httpGet:
+              path: /identity
+              port: 32400
+            periodSeconds: 10
+            failureThreshold: 30   # up to 5 min for first start / DB migrations
+          livenessProbe:
+            httpGet:
+              path: /identity
+              port: 32400
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /identity
+              port: 32400
+            periodSeconds: 10
+            timeoutSeconds: 5
           volumeMounts:
             - name: config
               mountPath: /config
