@@ -39,9 +39,9 @@ spec:
             claimName: sonarr-config
         - name: downloads
           nfs:
-            server: 10.10.10.10
-            path: /mnt/user/Media/_DOWNLOADS
+            server: 10.10.10.14 
+            path: /mnt/media/_DOWNLOADS
         - name: media
           nfs:
-            server: 10.10.10.10
-            path: /mnt/user/Media
+            server: 10.10.10.14
+            path: /mnt/media

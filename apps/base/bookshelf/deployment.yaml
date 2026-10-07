@@ -43,12 +43,12 @@ spec:
       volumes:
         - name: bookshelf-audiobooks
           nfs:
-            server: 10.10.10.10 
-            path: /mnt/user/Media/AudioBooks
+            server: 10.10.10.14
+            path: /mnt/media/AudioBooks
         - name: bookshelf-podcasts
           nfs:
-            server: 10.10.10.10
-            path: /mnt/user/Media/Podcasts
+            server: 10.10.10.14
+            path: /mnt/media/Podcasts
         - name: bookshelf-config
           persistentVolumeClaim:
             claimName: bookshelf-config-lh      # ← changed to -lh
