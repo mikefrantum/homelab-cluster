@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: krusader-config
+  namespace: media-tools
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: krusader
+  namespace: media-tools
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: krusader
+  template:
+    metadata:
+      labels:
+        app: krusader
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: server0   # /mnt/media lives here
+      containers:
+        - name: krusader
+          # Pin to the current tag from https://hub.docker.com/r/binhex/arch-krusader/tags
+          image: binhex/arch-krusader:REPLACE_WITH_CURRENT_TAG
+          env:
+            # The image starts as root, then drops to this user,
+            # so moved/created files stay owned by 99:100 like Plex expects
+            - name: PUID
+              value: "99"
+            - name: PGID
+              value: "100"
+            - name: UMASK
+              value: "000"
+            - name: TZ
+              value: "America/Denver"
+            - name: TEMP_FOLDER
+              value: "/config/krusader/tmp"
+            - name: WEBPAGE_TITLE
+              value: "Krusader"
+            - name: ENABLE_STARTUP_SCRIPTS
+              value: "no"
+            # Optional password for the web UI. Create the secret with SOPS:
+            #   kubectl -n media-tools create secret generic krusader \
+            #     --from-literal=vnc-password=... --dry-run=client -o yaml
+            - name: VNC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: krusader
+                  key: vnc-password
+                  optional: true
+          ports:
+            - name: web
+              containerPort: 6080   # noVNC (browser UI)
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          readinessProbe:
+            tcpSocket:
+              port: 6080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: media
+              mountPath: /media
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: krusader-config
+        - name: media
+          hostPath:
+            path: /mnt/media
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: krusader
+  namespace: media-tools
+spec:
+  selector:
+    app: krusader
+  ports:
+    - name: web
+      port: 6080
+      targetPort: 6080
