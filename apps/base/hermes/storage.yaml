@@ -33,7 +33,7 @@ spec:
     - retrans=2
   nfs:
     server: 10.10.10.14
-    path: /mnt/media/k8s-volumes/hermes-hermes-shared
+    path: /mnt/k8s-volumes/hermes-hermes-shared
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

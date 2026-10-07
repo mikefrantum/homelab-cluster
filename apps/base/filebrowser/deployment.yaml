@@ -61,4 +61,4 @@ spec:
         - name: folder
           nfs:
             server: 10.10.10.14
-            path: /mnt/media/client-files
+            path: /mnt/k8s-volumes/client-files

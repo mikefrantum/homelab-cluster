@@ -41,7 +41,7 @@ spec:
           enabled: true
           type: nfs
           server: 10.10.10.14
-          path: /mnt/media/k8s-volumes/immich-immich-library/external
+          path: /mnt/k8s-volumes/immich-immich-library/external
           globalMounts:
             - path: /external
 
