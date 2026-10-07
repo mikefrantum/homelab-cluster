@@ -60,5 +60,5 @@ spec:
             claimName: filebrowser-data
         - name: folder
           nfs:
-            server: 10.10.10.10
-            path: /mnt/user/client-files
+            server: 10.10.10.14
+            path: /mnt/media/client-files
