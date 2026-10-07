@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: plex2.lab.nohermosa.com
+    - host: plex.lab.nohermosa.com
       http:
         paths:
           - path: /
