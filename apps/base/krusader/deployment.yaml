@@ -32,7 +32,7 @@ spec:
       containers:
         - name: krusader
           # Pin to the current tag from https://hub.docker.com/r/binhex/arch-krusader/tags
-          image: binhex/arch-krusader:REPLACE_WITH_CURRENT_TAG
+          image: binhex/arch-krusader:2.9.0-2-01
           env:
             # The image starts as root, then drops to this user,
             # so moved/created files stay owned by 99:100 like Plex expects
