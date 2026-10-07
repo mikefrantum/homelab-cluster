@@ -20,7 +20,7 @@ spec:
         kubernetes.io/hostname: server0 # GPU + local media mount both live here
       containers:
         - name: jellyfin
-          image: lscr.io/linuxserver/jellyfin:12.2.20261005-225228
+          image: lscr.io/linuxserver/jellyfin:12.2ubu2604-ls53
           env:
             - name: PUID
               value: "99"
