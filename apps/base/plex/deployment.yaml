@@ -56,5 +56,5 @@ spec:
             claimName: plex-config
         - name: media
           hostPath:
-            path: /mnt/media/Media
+            path: /mnt/media
             type: Directory
