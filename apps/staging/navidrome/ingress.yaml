@@ -4,7 +4,7 @@ metadata:
   name: navidrome
   namespace: navidrome
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.entrypoints:
     # If cert-manager is installed, uncomment and set your issuer:
     # cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
