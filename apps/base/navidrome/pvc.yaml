@@ -1,0 +1,14 @@
+# Navidrome's database, cache and artwork — small, but SQLite wants block storage, not NFS
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: navidrome-data
+  namespace: navidrome
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi
+
