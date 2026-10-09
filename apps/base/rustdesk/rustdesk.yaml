@@ -38,6 +38,14 @@ spec:
         - name: hbbs
           image: rustdesk/rustdesk-server:latest
           command: ["hbbs"]
+          env:
+            # Force every connection through hbbr instead of attempting direct
+            # peer-to-peer -- client and host are both on the same Tailscale
+            # tailnet as the relay, which was causing hbbs to hand back a
+            # direct-connect address that failed (desktop isn't itself running
+            # hbbr, so a direct attempt to its IP on the relay's ports fails).
+            - name: ALWAYS_USE_RELAY
+              value: "Y"
           volumeMounts:
             - name: data
               mountPath: /root
@@ -51,3 +59,4 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: rustdesk-data
+
