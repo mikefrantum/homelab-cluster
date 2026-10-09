@@ -15,12 +15,13 @@ spec:
       labels:
         app: filebrowser
     spec:
-      # gtsteffaniak/filebrowser (Quantum) runs as a built-in non-root
-      # user "filebrowser" (UID:GID 1000:1000) on v1.3+ images.
+      # Runs as 99:100 (nobody:users) to match ownership on the
+      # server0 NFS export (/mnt/k8s-volumes), which fsGroup can't change.
       securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
-        runAsGroup: 1000
+        runAsUser: 99
+        runAsGroup: 100
+        fsGroup: 100
+        fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: filebrowser
           image: ghcr.io/gtsteffaniak/filebrowser:stable
