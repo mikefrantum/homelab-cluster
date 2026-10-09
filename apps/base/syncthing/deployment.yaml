@@ -15,15 +15,15 @@ spec:
       labels:
         app: syncthing
     spec:
-      # Pinned to server2 for now, matching the SABnzbd/qBittorrent pattern --
-      # single-node cluster so this doesn't matter much yet, but keeps future
-      # placement predictable once server1 rejoins with fewer taints.
+      # Pinned to server0, where the data disks live. hostPath gives local I/O
+      # and working inotify file watching (which doesn't work over NFS).
       nodeSelector:
-        kubernetes.io/hostname: server2
+        kubernetes.io/hostname: server0
       containers:
         - name: syncthing
           image: lscr.io/linuxserver/syncthing:2.1.5
           env:
+            # 99:100 (nobody:users) matches ownership on server0's disks
             - name: PUID
               value: "99"
             - name: PGID
@@ -42,15 +42,35 @@ spec:
             - name: discovery
               containerPort: 21027
               protocol: UDP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          readinessProbe:
+            tcpSocket:
+              port: 8384
+            initialDelaySeconds: 10
+            periodSeconds: 10
           volumeMounts:
             - name: config
               mountPath: /config
-          # No data folders mounted yet -- Mike will wire in NFS mounts for
-          # MikeDrive/Files and client-files once Unraid is decommissioned
-          # and the real migration happens. See homelab-app-deployment skill,
-          # references/arr-stack.md "Unraid -> Ubuntu migration notes" for
-          # the pattern used by every other app with direct NFS mounts.
+            # Add folders in the Syncthing UI by path under /data, e.g.
+            #   /data/media/Movies
+            #   /data/k8s-volumes/client-files
+            #   /data/k8s-volumes/hermes-hermes-shared
+            - name: media
+              mountPath: /data/media
+            - name: k8s-volumes
+              mountPath: /data/k8s-volumes
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: syncthing-config
+        - name: media
+          hostPath:
+            path: /mnt/media
+            type: Directory
+        - name: k8s-volumes
+          hostPath:
+            path: /mnt/k8s-volumes
+            type: Directory
