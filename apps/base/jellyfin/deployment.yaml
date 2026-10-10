@@ -42,7 +42,6 @@ spec:
               mountPath: /config
             - name: media
               mountPath: /media
-              readOnly: true
       volumes:
         - name: config
           persistentVolumeClaim:
