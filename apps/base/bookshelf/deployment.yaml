@@ -26,6 +26,12 @@ spec:
             - configMapRef:
                 name: bookshelf-configmap
 
+          env:
+            - name: PODCAST_DOWNLOAD_TIMEOUT
+              value: "120000"        # 2 minutes, in ms
+            - name: MAX_FAILED_EPISODE_CHECKS
+              value: "100"
+
           ports:
             - containerPort: 3005
               protocol: TCP
@@ -51,7 +57,7 @@ spec:
             path: /mnt/media/Podcasts
         - name: bookshelf-config
           persistentVolumeClaim:
-            claimName: bookshelf-config-lh      # ← changed to -lh
+            claimName: bookshelf-config-lh
         - name: bookshelf-metadata
           persistentVolumeClaim:
-            claimName: bookshelf-metadata-lh    # ← changed to -lh
+            claimName: bookshelf-metadata-lh
