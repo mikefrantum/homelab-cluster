@@ -84,5 +84,5 @@ spec:
         - name: music
           nfs:
             server: 10.10.10.14
-            path: /mnt/media
+            path: /mnt/media/MUSIC
             readOnly: true
