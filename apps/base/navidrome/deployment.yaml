@@ -45,6 +45,14 @@ spec:
               value: "false"
             - name: TZ
               value: America/Denver
+            - name: ND_LASTFM_ENABLED
+              value: "true"
+            - name: ND_LASTFM_APIKEY
+              valueFrom:
+                secretKeyRef: { name: navidrome-lastfm, key: apikey }
+            - name: ND_LASTFM_SECRET
+              valueFrom:
+                secretKeyRef: { name: navidrome-lastfm, key: secret }
           volumeMounts:
             - name: data
               mountPath: /data
@@ -78,4 +86,3 @@ spec:
             server: 10.10.10.14
             path: /mnt/media
             readOnly: true
-

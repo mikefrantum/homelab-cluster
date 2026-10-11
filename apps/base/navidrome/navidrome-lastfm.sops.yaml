@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+    apikey: ENC[AES256_GCM,data:iEUkFgdzmB2yc5e2B1jGMj2VwnlACyHavRoK00XSIpyP4bmuM8cXJM/xEpA=,iv:/2d4Onm1TJ/SSD2de57Dvx9sREeWk7ZJ3mOT8HTNBIM=,tag:NluPlVvNUpDFd/fq3InYdw==,type:str]
+    secret: ENC[AES256_GCM,data:AxdtdHIlQXfAOyDL5Qm6KQVK1E+1PpM0+I8e2ULIZR0D1HdJ76pLfhZK3IA=,iv:MKcDaWlA/Wt+dDn7SAT0wfJpuZvfso6DEZZQGignlKY=,tag:Q4ySSc3937Nkwp+TYgKshg==,type:str]
+kind: Secret
+metadata:
+    name: navidrome-lastfm
+    namespace: navidrome
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB3U0ltWk5oRGFnMFFRRHFR
+            d3k4KzBLaXJZMElZTk84eER5OGZhN0d6S2dzCjdrQnpMTVgzek5Ta3FuTFRMSmtU
+            ZmRXaW1qZUprNWpKdVd6UG9pakUwaFkKLS0tIHY3OWcwYTNmYTNLeFA2YWU2czEz
+            Sk44Vm5HYXQ4NjJLamVZcFlzUThZakUK5djUvSg42dTbBtKEHFSFHllcdX0u2zh4
+            ecM8NeLZLJ7kcuEMb8Bc3XxSbRR9GmH0Mewrsz8Y7sfYO2TxgmhERg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1mah2f0v3cjpu6v7d4ej0qjswqfggh9lru0yeywh49fyyd5wlwqyqykafvp
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-11T21:21:00Z"
+    mac: ENC[AES256_GCM,data:kouFoSZRmZmG8PQj7jDeTJCNqNR7IxNQqGocfSCnQzBRjkElNIQO9lc5TOkF5URODUoBIR5vbqag/j6aY5cKtk/QSzCnSiSUJJ5pTpwi+1l/eQeeMAOJswZPyePDsED6rgKx1dL8AMK09Hpbbi+aMk8AsQjylF0hYD75gVWnFSk=,iv:fZeKUvGa1K2cwPWL2fgHXrRBIsYlMlsAmawGwq6ZfGc=,tag:gZkimXXoIo1iR0GpElUe+Q==,type:str]
+    version: 3.13.3
