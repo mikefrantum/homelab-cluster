@@ -52,7 +52,12 @@ spec:
               mountPath: /home/filebrowser/data
             - name: folder
               mountPath: /folder
+            - mountPath: /cache
+              name: cache
       volumes:
+        - name: cache
+          emptyDir:
+             sizeLimit: 20Gi
         - name: config
           configMap:
             name: filebrowser-config

@@ -7,7 +7,7 @@ data:
   config.yaml: |
     server:
       database: /home/filebrowser/data/database.db
-      cacheDir: /home/filebrowser/data/tmp
+      cacheDir: /cache
       sources:
         - path: /folder
           config:
