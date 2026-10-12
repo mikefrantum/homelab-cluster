@@ -6,8 +6,11 @@ metadata:
 data:
   config.yaml: |
     server:
+      database: /home/filebrowser/data/database.db
       cacheDir: /home/filebrowser/data/tmp
       sources:
         - path: /folder
           config:
             defaultEnabled: true
+    auth:
+      tokenExpirationHours: 720   # 30 days; whole number of hours
