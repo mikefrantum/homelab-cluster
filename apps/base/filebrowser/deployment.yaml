@@ -42,6 +42,8 @@ spec:
                   key: FILEBROWSER_ADMIN_PASSWORD
             - name: TZ
               value: "America/Denver"
+            - name: FB_TOKEN_EXPIRATION_TIME
+              value: "720h"   # 30 days
           ports:
             - containerPort: 80
           volumeMounts:
