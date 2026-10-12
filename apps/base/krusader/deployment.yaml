@@ -50,9 +50,8 @@ spec:
               value: "Krusader"
             - name: ENABLE_STARTUP_SCRIPTS
               value: "no"
-            # Optional password for the web UI. Create the secret with SOPS:
-            #   kubectl -n media-tools create secret generic krusader \
-            #     --from-literal=vnc-password=... --dry-run=client -o yaml
+            - name: LC_TIME
+              value: en_US.UTF-8
             - name: VNC_PASSWORD
               valueFrom:
                 secretKeyRef:
