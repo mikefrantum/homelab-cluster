@@ -62,9 +62,9 @@ spec:
           readinessProbe:
             httpGet:
               path: /ping
-              port: http
-            initialDelaySeconds: 5
+              port: 4533
             periodSeconds: 10
+            failureThreshold: 60
           livenessProbe:
             httpGet:
               path: /ping
