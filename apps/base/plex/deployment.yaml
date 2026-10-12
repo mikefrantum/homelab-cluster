@@ -24,7 +24,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
         - name: plex
-          image: lscr.io/linuxserver/plex:1.43.4.10903-e5521bd8c-ls327
+          image: ghcr.io/linuxserver/plex:1.43.4.10903-e5521bd8c-ls327
           env:
             - name: PUID
               value: "99"
