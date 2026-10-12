@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scriberr
+  namespace: scriberr
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: scriberr.lab.nohermosa.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: scriberr
+                port:
+                  name: http
+

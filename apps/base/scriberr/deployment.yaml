@@ -1,0 +1,147 @@
+# Database, uploads, transcripts
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: scriberr-data
+  namespace: scriberr
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 30Gi
+---
+# Python environments + models (WhisperX, PyAnnote, NeMo). Large -- PyTorch
+# with CUDA alone is several GB. Persisting it keeps restarts fast.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: scriberr-env
+  namespace: scriberr
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 40Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scriberr
+  namespace: scriberr
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: scriberr
+  template:
+    metadata:
+      labels:
+        app: scriberr
+    spec:
+      # GPU transcription + diarization on the RTX 2060 (third time-slice,
+      # alongside Plex and Jellyfin).
+      runtimeClassName: nvidia
+      nodeSelector:
+        kubernetes.io/hostname: server0
+      containers:
+        - name: scriberr
+          image: ghcr.io/rishikanthc/scriberr-cuda:v1.2.0
+          env:
+            - name: APP_ENV
+              value: "production"
+            # The image's built-in user is 10001. With the default PUID=1000
+            # the entrypoint chowns data to 1000 but still runs as 10001,
+            # which breaks writes. Matching 10001 keeps them consistent.
+            - name: PUID
+              value: "10001"
+            - name: PGID
+              value: "10001"
+            - name: TZ
+              value: "America/Denver"
+            # Browser origins allowed to call the API in production mode.
+            - name: ALLOWED_ORIGINS
+              value: "https://scriberr.lab.nohermosa.com,http://scriberr.lab.nohermosa.com"
+            # Login cookies are marked Secure by default in production, which
+            # breaks login over plain http. Remove this if you only ever use https.
+            - name: SECURE_COOKIES
+              value: "false"
+            # Fixed secret so logins survive pod restarts (otherwise a new
+            # random one is generated on every start).
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: scriberr-secret
+                  key: JWT_SECRET
+            # Optional: only needed for PyAnnote diarization. The CUDA image
+            # can use NVIDIA Sortformer for diarization without it.
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: scriberr-secret
+                  key: HF_TOKEN
+                  optional: true
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,utility"
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              nvidia.com/gpu: 1
+          # First start builds Python envs and downloads models (many GB),
+          # and the entrypoint re-chowns the env volume on every start.
+          # Allow up to 30 minutes before Kubernetes gives up.
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            failureThreshold: 180
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: env
+              mountPath: /app/whisperx-env
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: scriberr-data
+        - name: env
+          persistentVolumeClaim:
+            claimName: scriberr-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scriberr
+  namespace: scriberr
+spec:
+  selector:
+    app: scriberr
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+
