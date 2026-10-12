@@ -24,7 +24,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: filebrowser
-          image: ghcr.io/gtsteffaniak/filebrowser:stable
+          image: ghcr.io/gtsteffaniak/filebrowser:1.5.6-stable
           env:
             # Config lives OUTSIDE /home/filebrowser/data (mounted from a
             # ConfigMap below) rather than inside it as a subPath file --
@@ -42,8 +42,6 @@ spec:
                   key: FILEBROWSER_ADMIN_PASSWORD
             - name: TZ
               value: "America/Denver"
-            - name: FB_TOKEN_EXPIRATION_TIME
-              value: "720h"   # 30 days
           ports:
             - containerPort: 80
           volumeMounts:
