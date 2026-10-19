@@ -1,0 +1,12 @@
+# Downloaded models. A 3B model at Q4 is ~2 GB; 20Gi leaves room to try a few.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-models
+  namespace: ollama
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 20Gi

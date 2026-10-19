@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  namespace: ollama
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      # Local LLM for Scriberr summaries / transcript chat, on the RTX 2060.
+      # Time-slicing shares compute but NOT VRAM, so everything below is
+      # tuned to hold as little VRAM as possible, for as short as possible.
+      runtimeClassName: nvidia
+      nodeSelector:
+        kubernetes.io/hostname: server0
+      containers:
+        - name: ollama
+          image: ollama/ollama:0.40.5
+          env:
+            - name: OLLAMA_HOST
+              value: "0.0.0.0:11434"
+            # Unload the model 1 minute after the last request so the VRAM
+            # is free again before Scriberr's next transcription.
+            - name: OLLAMA_KEEP_ALIVE
+              value: "1m"
+            - name: OLLAMA_MAX_LOADED_MODELS
+              value: "1"
+            - name: OLLAMA_NUM_PARALLEL
+              value: "1"
+            # Enough for a ~1 hour meeting transcript. Larger contexts cost
+            # more VRAM for the KV cache.
+            - name: OLLAMA_CONTEXT_LENGTH
+              value: "16384"
+            # Halves KV-cache VRAM (requires flash attention).
+            - name: OLLAMA_FLASH_ATTENTION
+              value: "1"
+            - name: OLLAMA_KV_CACHE_TYPE
+              value: "q8_0"
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,utility"
+          ports:
+            - name: http
+              containerPort: 11434
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1Gi
+            limits:
+              memory: 8Gi
+              nvidia.com/gpu: 1
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          volumeMounts:
+            - name: models
+              mountPath: /root/.ollama
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: ollama-models
