@@ -35,6 +35,8 @@ spec:
               value: /data
             - name: ND_SCANSCHEDULE
               value: "@every 1h"
+            - name: ND_SCANNER_WATCHERWAIT
+              value: "5s"
             - name: ND_LOGLEVEL
               value: info
             - name: ND_SESSIONTIMEOUT
