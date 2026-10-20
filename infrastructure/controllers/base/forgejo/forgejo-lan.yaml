@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: forgejo-lan
+  namespace: forgejo
+spec:
+  type: LoadBalancer
+  selector:
+    app: forgejo
+  # Only allow LAN and Tailscale clients
+  loadBalancerSourceRanges:
+    - 192.168.1.0/24
+    - 100.64.0.0/10
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
