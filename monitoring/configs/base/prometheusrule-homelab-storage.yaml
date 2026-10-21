@@ -1,0 +1,120 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: homelab-storage
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: longhorn
+      rules:
+        # A replica is missing and hasn't been rebuilt (yesterday's state, for hours)
+        - alert: LonghornVolumeDegraded
+          expr: (longhorn_volume_robustness{state="degraded"} == 1) or (longhorn_volume_robustness == 2)
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Longhorn volume degraded: {{ $labels.pvc_namespace }}/{{ $labels.pvc }}"
+            description: "Volume {{ $labels.volume }} has been missing replicas for 30m. Check disk scheduling."
+
+        # No healthy replica left, so the data is unavailable
+        - alert: LonghornVolumeFaulted
+          expr: (longhorn_volume_robustness{state="faulted"} == 1) or (longhorn_volume_robustness == 3)
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Longhorn volume FAULTED: {{ $labels.pvc_namespace }}/{{ $labels.pvc }}"
+            description: "Volume {{ $labels.volume }} has no healthy replica."
+
+        # Volumes stuck "attaching" (yesterday's ghost-pod problem)
+        - alert: LonghornVolumeStuckAttaching
+          expr: (longhorn_volume_state{state="attaching"} == 1) or (longhorn_volume_state == 4)
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Longhorn volume stuck attaching: {{ $labels.pvc_namespace }}/{{ $labels.pvc }}"
+            description: "Usually an old pod on a dead node still holds the attachment."
+
+        # Disk not ready (server0's 10-day silent failure)
+        - alert: LonghornDiskNotReady
+          expr: longhorn_disk_status{condition="ready"} == 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Longhorn disk not ready: {{ $labels.node }}/{{ $labels.disk }}"
+            description: "Reason: {{ $labels.condition_reason }}. Check the mount on {{ $labels.node }}."
+
+        # Disk ready but unschedulable (server1 'full' from orphans)
+        - alert: LonghornDiskNotSchedulable
+          expr: longhorn_disk_status{condition="schedulable"} == 0
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Longhorn disk not schedulable: {{ $labels.node }}/{{ $labels.disk }}"
+            description: "Reason: {{ $labels.condition_reason }}. Usually low space, orphaned data, or reservation."
+
+        - alert: LonghornDiskUsageHigh
+          expr: longhorn_disk_usage_bytes / longhorn_disk_capacity_bytes > 0.80
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Longhorn disk {{ $labels.node }}/{{ $labels.disk }} over 80% full"
+            description: "{{ $value | humanizePercentage }} used. Check orphans: kubectl -n longhorn-system get orphans.longhorn.io"
+
+        - alert: LonghornNodeDown
+          expr: longhorn_node_status{condition="ready"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Longhorn node down: {{ $labels.node }}"
+            description: "Replicas on {{ $labels.node }} are unavailable. Reason: {{ $labels.condition_reason }}"
+
+        # If Longhorn metrics vanish, every rule above goes silent, so alert on that too
+        - alert: LonghornMetricsMissing
+          expr: absent(longhorn_node_count_total)
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "No Longhorn metrics in Prometheus"
+            description: "The ServiceMonitor or longhorn-manager is broken, so Longhorn alerts can't fire."
+
+    - name: storage-mounts
+      rules:
+        # server0's 4TB NVMe isn't mounted (the original Oct 10 root cause)
+        - alert: Server0LonghornDiskUnmounted
+          expr: absent(node_filesystem_size_bytes{mountpoint="/var/lib/longhorn-disk"})
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "server0 Longhorn NVMe not mounted"
+            description: "/var/lib/longhorn-disk is missing. Check fstab and nvme1n1p1 on server0."
+
+        # server1/server2 Longhorn LVs, expected on 2 nodes
+        - alert: LonghornLVUnmounted
+          expr: count(node_filesystem_size_bytes{mountpoint="/var/lib/longhorn"}) < 2
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "A Longhorn LV is not mounted on server1 or server2"
+            description: "Expected /var/lib/longhorn mounted on 2 nodes, found {{ $value }}."
+
+        # Media and NFS array on server0
+        - alert: MediaArrayUnmounted
+          expr: absent(node_filesystem_size_bytes{mountpoint="/mnt/disk"})
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "server0 media/NFS array not mounted"
+            description: "/mnt/disk (xfs RAID) is missing. NFS media and k8s-volumes are down."
