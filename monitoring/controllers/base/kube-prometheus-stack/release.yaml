@@ -39,3 +39,36 @@ spec:
         ingressClassName: traefik
         hosts:
           - grafana.lab.nohermosa.com
+      persistence:
+        enabled: true
+        type: pvc
+        storageClassName: longhorn
+        accessModes: ["ReadWriteOnce"]
+        size: 2Gi
+      # RWO volume: the old pod must stop before the new one starts
+      deploymentStrategy:
+        type: Recreate
+
+    prometheus:
+      prometheusSpec:
+        retention: 30d
+        retentionSize: 18GB
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: longhorn
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 20Gi
+
+    alertmanager:
+      alertmanagerSpec:
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: longhorn
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 1Gi
