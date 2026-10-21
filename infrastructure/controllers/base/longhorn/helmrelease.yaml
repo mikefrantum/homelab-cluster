@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: longhorn
-      version: ">= 1.7.0"
+      version: "1.13.0"
       sourceRef:
         kind: HelmRepository
         name: longhorn
@@ -17,12 +17,12 @@ spec:
     createNamespace: true
   values:
     defaultSettings:
-      # match your default replica count to the 2 nodes you have now
       defaultReplicaCount: 2
-      # the dedicated disk you mounted
       defaultDataPath: /var/lib/longhorn
+      storageMinimalAvailablePercentage: 15
+      storageReservedPercentageForDefaultDisk: 10
+      storageOverProvisioningPercentage: 200
+      nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
     persistence:
-      # don't make Longhorn the default SC yet — keep unraid-nfs as default
-      # so nothing auto-migrates until you deliberately move it
       defaultClass: false
       defaultClassReplicaCount: 2
