@@ -17,7 +17,7 @@ spec:
     createNamespace: true
   values:
     defaultSettings:
-      defaultReplicaCount: 2
+      defaultReplicaCount: 3
       defaultDataPath: /var/lib/longhorn
       storageMinimalAvailablePercentage: 15
       storageReservedPercentageForDefaultDisk: 10
@@ -26,4 +26,4 @@ spec:
       replicaAutoBalance: best-effort
     persistence:
       defaultClass: false
-      defaultClassReplicaCount: 2
+      defaultClassReplicaCount: 3
