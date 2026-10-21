@@ -23,6 +23,7 @@ spec:
       storageReservedPercentageForDefaultDisk: 10
       storageOverProvisioningPercentage: 200
       nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+      replicaAutoBalance: best-effort
     persistence:
       defaultClass: false
       defaultClassReplicaCount: 2
