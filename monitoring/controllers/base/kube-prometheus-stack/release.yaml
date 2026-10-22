@@ -61,9 +61,11 @@ spec:
               resources:
                 requests:
                   storage: 20Gi
-
     alertmanager:
       alertmanagerSpec:
+        # mounts the secret at /etc/alertmanager/secrets/alertmanager-telegram/
+        secrets:
+          - alertmanager-telegram
         storage:
           volumeClaimTemplate:
             spec:
@@ -72,3 +74,30 @@ spec:
               resources:
                 requests:
                   storage: 1Gi
+      config:
+        global:
+          resolve_timeout: 5m
+        route:
+          receiver: telegram
+          group_by: [alertname, namespace]
+          group_wait: 30s
+          group_interval: 5m
+          repeat_interval: 4h
+          routes:
+            # noise: Watchdog always fires by design; the others are
+            # false alarms on k3s (these components are embedded in k3s)
+            - receiver: "null"
+              matchers:
+                - alertname =~ "Watchdog|InfoInhibitor|KubeControllerManagerDown|KubeSchedulerDown|KubeProxyDown"
+        inhibit_rules:
+          # a critical alert mutes the matching warning
+          - source_matchers: [severity = "critical"]
+            target_matchers: [severity = "warning"]
+            equal: [alertname, namespace]
+        receivers:
+          - name: "null"
+          - name: telegram
+            telegram_configs:
+              - bot_token_file: /etc/alertmanager/secrets/alertmanager-telegram/bot-token
+                chat_id: 8206889204
+                send_resolved: true
