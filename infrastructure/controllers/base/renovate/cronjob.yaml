@@ -8,18 +8,17 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 86400 # delete finished jobs after 24h
       template:
         spec:
           containers:
             - name: renovate
               image: renovate/renovate:latest
               args:
-                - mikefrantum/homelab-cluster 
-
+                - mikefrantum/homelab-cluster
               envFrom:
                 - secretRef:
                     name: renovate-container-env
                 - configMapRef:
                     name: renovate-configmap
-
           restartPolicy: Never
