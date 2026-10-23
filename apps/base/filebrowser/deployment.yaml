@@ -24,7 +24,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: filebrowser
-          image: ghcr.io/gtsteffaniak/filebrowser:1.5.8-stable
+          image: ghcr.io/gtsteffaniak/filebrowser:2.0.2-stable
           env:
             # Config lives OUTSIDE /home/filebrowser/data (mounted from a
             # ConfigMap below) rather than inside it as a subPath file --
