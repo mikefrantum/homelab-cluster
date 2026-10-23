@@ -23,7 +23,7 @@ spec:
         kubernetes.io/hostname: server0
       containers:
         - name: ollama
-          image: ollama/ollama:0.40.5
+          image: ollama/ollama:0.40.10
           env:
             - name: OLLAMA_HOST
               value: "0.0.0.0:11434"
