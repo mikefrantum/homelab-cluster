@@ -21,7 +21,6 @@ spec:
   driftDetection:
     mode: enabled
     ignore:
-      # Ignore "validated" annotation which is not inserted during install
       - paths: ["/metadata/annotations/prometheus-operator-validated"]
         target:
           kind: PrometheusRule
@@ -45,7 +44,6 @@ spec:
         storageClassName: longhorn
         accessModes: ["ReadWriteOnce"]
         size: 2Gi
-      # RWO volume: the old pod must stop before the new one starts
       deploymentStrategy:
         type: Recreate
 
@@ -62,8 +60,21 @@ spec:
                 requests:
                   storage: 20Gi
     alertmanager:
+      templateFiles:
+        telegram.tmpl: |-
+          {{ define "telegram.message" }}
+          {{- range .Alerts }}
+          {{ if eq .Status "firing" }}{{ if eq .Labels.severity "critical" }}🔴{{ else }}🟠{{ end }}{{ else }}✅{{ end }} <b>{{ .Labels.alertname }}</b>{{ if .Labels.namespace }} · {{ .Labels.namespace }}{{ end }}
+          {{ .Annotations.summary | html }}
+          {{- if and (eq .Status "firing") .Annotations.description }}
+          <i>{{ .Annotations.description | html }}</i>
+          {{- end }}
+          {{- if and (eq .Status "firing") .Annotations.runbook_url }}
+          <a href="{{ .Annotations.runbook_url }}">runbook</a>
+          {{- end }}
+          {{ end }}
+          {{- end }}
       alertmanagerSpec:
-        # mounts the secret at /etc/alertmanager/secrets/alertmanager-telegram/
         secrets:
           - alertmanager-telegram
         storage:
@@ -75,6 +86,8 @@ spec:
                 requests:
                   storage: 1Gi
       config:
+        templates:
+          - /etc/alertmanager/config/*.tmpl
         global:
           resolve_timeout: 5m
         route:
@@ -84,13 +97,10 @@ spec:
           group_interval: 5m
           repeat_interval: 4h
           routes:
-            # noise: Watchdog always fires by design; the others are
-            # false alarms on k3s (these components are embedded in k3s)
             - receiver: "null"
               matchers:
                 - alertname =~ "Watchdog|InfoInhibitor|KubeControllerManagerDown|KubeSchedulerDown|KubeProxyDown"
         inhibit_rules:
-          # a critical alert mutes the matching warning
           - source_matchers: [severity = "critical"]
             target_matchers: [severity = "warning"]
             equal: [alertname, namespace]
@@ -101,3 +111,5 @@ spec:
               - bot_token_file: /etc/alertmanager/secrets/alertmanager-telegram/bot-token
                 chat_id: 8206889204
                 send_resolved: true
+                parse_mode: HTML
+                message: '{{ template "telegram.message" . }}'
