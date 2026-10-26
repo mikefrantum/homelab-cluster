@@ -1,0 +1,57 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: client-sites
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  jobName: client-sites
+  interval: 30s
+  module: http_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc:9115
+  targets:
+    staticConfig:
+      labels:
+        tier: client
+      static:
+        - https://zoomzoom.design/
+        - https://yutsai.zoomzoom.design/
+        - https://406cruisers.com/
+        - https://bridgerdrilling.com/
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: apps
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  jobName: apps
+  interval: 60s
+  module: http_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc:9115
+  targets:
+    staticConfig:
+      labels:
+        tier: app
+      static:
+        - https://filebrowser.zoomzoom.design/
+        - https://forgejo.nohermosa.com/
+        - http://music.lab.nohermosa.com/
+        - http://kru.lab.nohermosa.com/
+        - https://homarr.nohermosa.com/
+        - http://grafana.lab.nohermosa.com/
+        - http://paperless.lab.nohermosa.com/
+        - https://paperless.nohermosa.com/
+        - https://sabnzb.nohermosa.com/
+        - https://bookshelf.nohermosa.com/
+        - https://immich.nohermosa.com/
+        - http://prowlarr.lab.nohermosa.com/
+        - http://radarr.lab.nohermosa.com/
+        - http://sonarr.lab.nohermosa.com/
+        - http://lidarr.lab.nohermosa.com/
+        - http://qbittorrent.media.svc:8080/

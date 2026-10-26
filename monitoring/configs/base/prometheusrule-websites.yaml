@@ -1,0 +1,56 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: websites
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: websites
+      rules:
+        - alert: ClientSiteDown
+          expr: probe_success{tier="client"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Client site DOWN: {{ $labels.instance }}"
+            description: "Failing for 2 minutes. Check the site, its cloudflared pods, and Cloudflare."
+
+        - alert: AppDown
+          expr: probe_success{tier="app"} == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "App unreachable: {{ $labels.instance }}"
+            description: "Failing for 5 minutes."
+
+        - alert: ClientSiteSlow
+          expr: probe_duration_seconds{tier="client"} > 5
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Client site slow: {{ $labels.instance }}"
+            description: "Taking {{ $value | humanize }}s to respond for 10 minutes."
+
+        - alert: TLSCertExpiringSoon
+          expr: (probe_ssl_earliest_cert_expiry - time()) / 86400 < 14
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "TLS certificate expiring: {{ $labels.instance }}"
+            description: "Expires in {{ $value | humanize }} days."
+
+        # if the probes stop running, every rule above goes silent
+        - alert: WebsiteProbesMissing
+          expr: absent(probe_success{tier="client"})
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "No website probe data in Prometheus"
+            description: "The blackbox exporter or the Probe resources are broken, so site-down alerts can't fire."
