@@ -33,8 +33,8 @@ spec:
               value: /music
             - name: ND_DATAFOLDER
               value: /data
-            - name: ND_SCAN_SCHEDULE
-              value: "@every 1h"
+            - name: ND_SCANNER_SCHEDULE
+              value: "@every 30min"
             - name: ND_SCANNER_WATCHERWAIT
               value: "5s"
             - name: ND_LOGLEVEL
