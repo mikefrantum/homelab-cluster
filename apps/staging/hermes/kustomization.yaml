@@ -24,3 +24,5 @@ patches:
                       name: vikunja-credentials
                   - secretRef:
                       name: claude-oauth
+                  - secretRef:
+                      name: vault-git
