@@ -6,6 +6,7 @@ resources:
   - vikunja-secret.enc.yaml
   - claude-oauth.enc.yaml
   - forgejo-registry.enc.yaml
+  - vault-git.enc.yaml
 patches:
   - patch: |-
       apiVersion: apps/v1

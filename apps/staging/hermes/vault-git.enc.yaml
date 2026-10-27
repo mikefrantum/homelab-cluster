@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: vault-git
+    namespace: hermes
+type: Opaque
+stringData:
+    VAULT_GIT_TOKEN: ENC[AES256_GCM,data:ehtVqVHGmMlAw9Ur/frLTJDvTzi9XG4KMBa0E8j+DUG/ID5sl51V3g==,iv:4VLkuZoV5/PD/jj2NVFI31xSJbAMBpTa6MqfpLA0YiI=,tag:SozxZahKaNc/IR7R/GvSqQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB1Szkxay82OThnUXBxbGE3
+            MFI4Z05JRVlXZ3dvZnJpb3cxbE5Oc2V2Y0cwCnQ4THJ6cEtnVi8zR3orRWFKYnkx
+            S3RJL3RqdTl2Zmc5MUNJWjJySjkvd0EKLS0tIDIwSldIejMxYjFvU2U2dmpUVWVu
+            TzFLeXJ2cU5JZW9EaEQ5QW5YY0NjQ3cKiHEsQYHvMCPMBmOBP3fKpmGCiOENaUnc
+            agCg8GHnA0ybP7tUxjDStcciypFQ58Bj/6e3Go8HuB1e52u4BfUq5g==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1mah2f0v3cjpu6v7d4ej0qjswqfggh9lru0yeywh49fyyd5wlwqyqykafvp
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-27T15:27:23Z"
+    mac: ENC[AES256_GCM,data:nRQB1HLOnlgidGEuwGJjnsXppBA+MukjaYd1RHUSepmu5VBpabKPXe98TY6/w7Kbo035ZlZ/RUKBA3pkhcEgqVbhuysR4FPdIrD5KwNSIVyDJ4MRIKVSR1XgeKlDbT8zwU+Nm/kE4172EUsawsQ02pY/Mwk4D0lUai8yRJYgDLo=,iv:T6f8zfGPltJezcV6SXBvvHR8+qQp2/XkzQje8q7sME8=,tag:mWGRMnCiAKajqqsFi9a17A==,type:str]
+    version: 3.13.3
