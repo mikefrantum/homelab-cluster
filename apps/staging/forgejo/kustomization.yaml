@@ -5,4 +5,4 @@ namespace: forgejo
 resources:
   - cloudflare.yaml
   - cloudflare-secret.yaml
-
+  - service-lan.yaml
