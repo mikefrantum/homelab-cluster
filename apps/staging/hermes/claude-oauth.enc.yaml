@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: claude-oauth
+    namespace: hermes
+type: Opaque
+stringData:
+    CLAUDE_CODE_OAUTH_TOKEN: ENC[AES256_GCM,data:zQ/wzuWXtVvv+XeDxyC8W1+jLRnIdbsgMUz+0CWV9FaQ2eTVhjW0n0gt6TOVSL6A5o7yb5WT30zv2QXi0qKOvZYqvkIDm+ubOqE/YI5geCzG27j3lHCZd/iZXOEP0kZl7p69NSWLbXTK4gu1,iv:ro/ZUMKH6LTp7H27YOto7/GLYvAXKqZHZNVpY9Iw6sE=,tag:DKHVth6SZfc/DbJmCtTPqA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBKbGtwZFhoODdYcVdPVzli
+            MEROamdJT29tZjloa2xxWWRrMmtBOUVDdGpzCnUvRE5RWUVkRVZ0MlZ2U09qRUFx
+            MUQwT2FYeHV2cmorQXRxSkF3VDRTVE0KLS0tIG1maEV4TkxiUnBiZ1o0YlYzQ2Er
+            NHJxbWJHTmR4OTZrK0JuYURLTEZRbXcK4fCaiXkGXOVbQFoEVQ2JoslHTzdtsa6Z
+            Y0JgSbs8ujyvlqDttWpYUwZekmyZwsDZFw2FvDgLU+qWiE4Vnz1OgQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1mah2f0v3cjpu6v7d4ej0qjswqfggh9lru0yeywh49fyyd5wlwqyqykafvp
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-27T14:40:05Z"
+    mac: ENC[AES256_GCM,data:RaRhFZyGsonQAadwxV3powkS750V23PVFPT6vZzf0mnxmzPZQANt3rpvq/UermsLCS1Y5eb/uJYfguZz6Q+n3QVvQzrxngmlwzZYoQSYask3q4g6GlTYJzvqpUzdU7rNTP+Z4AJnBzoWESNKzwHlthEv4Xw3OdkhhSXnf1ota7A=,iv:1re0vrP4tcqrSEGWcDmqtd3U6zi3p3D9Dio09k86lk4=,tag:Lp//1K3eP743HegjdVLQIg==,type:str]
+    version: 3.13.3

@@ -9,7 +9,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: Recreate            # single writer to the state PVC — never two pods at once
+    type: Recreate
   selector:
     matchLabels:
       app: hermes
@@ -19,15 +19,13 @@ spec:
         app: hermes
         policy-type: app
     spec:
-      # NOTE: unlike Forgejo, the official Hermes image expects to start as ROOT.
-      # Its entrypoint performs a boot-time chown on /opt/data. Pinning a non-root
-      # UID (the Forgejo pattern) can break that step. fsGroup smooths group access.
       securityContext:
         fsGroup: 100
+      imagePullSecrets:
+        - name: forgejo-registry
       containers:
         - name: hermes
-          # Pinned — bump deliberately (or let Renovate PR it). Latest: v2026.6.19
-          image: nousresearch/hermes-agent:v2026.9.24
+          image: forgejo.nohermosa.com/mike/hermes-agent:v2026.9.24-clis1
           args: ["gateway", "run"]
           env:
             - name: TZ
@@ -36,6 +34,8 @@ spec:
               value: /opt/data
             - name: HERMES_SHARED_AUTH_DIR
               value: /opt/data/shared-auth
+            - name: DISABLE_AUTOUPDATER
+              value: "1"
           resources:
             requests:
               cpu: 250m

@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+    .dockerconfigjson: ENC[AES256_GCM,data:EqGMFBhDB4YPSiOJRbZS5PmQEGQeAf9RtCXLBKKYHo8SWaLPh859YRsfhZboyz/7I+X8X20TabBVm4v/AZUnZUa/LhrM/xZGkDLJgNaS8uyzxYfFwNWCnkwpP3Z96/ZeWMz6/FY0nhewQUgh1SLhT9dCKv512SFozamuk9l38vSGIxqnQUiKjrhjH9v6gaKXFzrSVxa3VCleec/ZcFJp1nBWlOeiDMEVp4kDSQIEHllqY2uVJpAuD4REOyiwUoK9kYK73e4gP/fupQC/2zoxtgkL5mcaZteeAu5A32cLQwvQt+uSD72Vfyin78/+zdiV,iv:cdSmaKhyH3SPn002fykSeUz9BsAAbKQVEeAemvGrbyI=,tag:4ORHg6pIb6tXRbPyitbQWw==,type:str]
+kind: Secret
+metadata:
+    name: forgejo-registry
+    namespace: hermes
+type: kubernetes.io/dockerconfigjson
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA0NFROaExxUDRId1lEcnJU
+            UkdTb0VmZVJGN1dWUVE0dlFkS1JLVXdQM1hVCjBnU1Yxck41ZWE2TE1CU1dLWS9W
+            K0U0ems2Nm9OVVJJU1ZNQ3dTeTVMN00KLS0tIFF5ZHFPQUJ1VWs2bmphVTBHbTRI
+            WTVtQWk4NXArSm4rZHZ5c2ZndWZKaHMK0iz2LE1IeT9Jbtws+p3Cuww8GawOJqMI
+            fIePLwiVMeazJL6BtvdPMvJEBAPWSnZMbKlVyxw5gJwEVDn7GzE9fA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1mah2f0v3cjpu6v7d4ej0qjswqfggh9lru0yeywh49fyyd5wlwqyqykafvp
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-27T14:52:02Z"
+    mac: ENC[AES256_GCM,data:3AEKJbexod+nfrajZLFaqERS626byTZCYAQRztL0keXrI/QaIrvD7oEJ+89KmUoHtXgPq4oYGaTpLFenA3b0oo51kcq2qsYhn/kyslu7Zdp2uqPhO3zzdNYhWFQ/242256aUKYqy04kO8bjhcuPLpiKsNJl7zVMAmbSF6Ioxib4=,iv:RRq+Cgn2ACPo9u5yuZgF5nHblojXwv1PvfZEMg0N59Y=,tag:DM2Ehhm02k3ayv8R3WKiDA==,type:str]
+    version: 3.13.3
