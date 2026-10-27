@@ -9,7 +9,7 @@ spec:
     app: forgejo
   # Only allow LAN and Tailscale clients
   loadBalancerSourceRanges:
-    - 192.168.1.0/24
+    - 10.10.10.0/24
     - 100.64.0.0/10
   ports:
     - name: http

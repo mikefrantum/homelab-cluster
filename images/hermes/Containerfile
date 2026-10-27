@@ -1,0 +1,15 @@
+ARG HERMES_VERSION=v2026.9.24
+FROM docker.io/nousresearch/hermes-agent:${HERMES_VERSION}
+USER root
+
+ARG CLAUDE_CODE_VERSION=latest
+ARG GROK_CLI_VERSION=latest
+
+RUN npm install -g \
+      @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION} \
+      @xai-official/grok@${GROK_CLI_VERSION} \
+ && npm cache clean --force
+
+ENV DISABLE_AUTOUPDATER=1
+
+RUN claude --version && grok --version
