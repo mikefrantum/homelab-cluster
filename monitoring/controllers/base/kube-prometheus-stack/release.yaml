@@ -99,7 +99,7 @@ spec:
           routes:
             - receiver: "null"
               matchers:
-                - alertname =~ "Watchdog|InfoInhibitor|KubeControllerManagerDown|KubeSchedulerDown|KubeProxyDown"
+                - alertname =~ "Watchdog|InfoInhibitor|KubeControllerManagerDown|KubeSchedulerDown|KubeProxyDown|CPUThrottlingHigh"
         inhibit_rules:
           - source_matchers: [severity = "critical"]
             target_matchers: [severity = "warning"]
