@@ -62,6 +62,9 @@ spec:
               mountPath: /data/media
             - name: k8s-volumes
               mountPath: /data/k8s-volumes
+            - name: mike-drive
+              mountPath: /data/mike-drive
+
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -73,4 +76,8 @@ spec:
         - name: k8s-volumes
           hostPath:
             path: /mnt/k8s-volumes
+            type: Directory
+        - name: mike-drive
+          hostPath:
+            path: /mnt/vault/MikeDrive
             type: Directory
