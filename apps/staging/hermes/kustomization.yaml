@@ -7,6 +7,8 @@ resources:
   - claude-oauth.enc.yaml
   - forgejo-registry.enc.yaml
   - vault-git.enc.yaml
+  - dashboard-secret.yaml
+  - ingress.yaml
 patches:
   - patch: |-
       apiVersion: apps/v1
@@ -26,3 +28,13 @@ patches:
                       name: claude-oauth
                   - secretRef:
                       name: vault-git
+              - name: hermes-serve
+                envFrom:
+                  - secretRef:
+                      name: vikunja-credentials
+                  - secretRef:
+                      name: claude-oauth
+                  - secretRef:
+                      name: vault-git
+                  - secretRef:
+                      name: hermes-dashboard-auth

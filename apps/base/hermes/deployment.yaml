@@ -47,6 +47,63 @@ spec:
               mountPath: /opt/data
             - name: shared
               mountPath: /opt/shared
+        # Desktop / remote-backend. Same image and volumes as gateway.
+        # command replaces the image ENTRYPOINT so this container does NOT
+        # run s6-overlay (which would otherwise start a second init tree and
+        # could chown /opt/data on boot). Gateway args stay untouched.
+        - name: hermes-serve
+          image: forgejo.nohermosa.com/mike/hermes-agent:v2026.9.24-clis1
+          # Same uid as the image `hermes` user. Skip s6 ENTRYPOINT (command
+          # below) so we do not run a second init/chown. main-wrapper allows
+          # uid==hermes without s6-setuidgid, which is not on PATH here.
+          securityContext:
+            runAsUser: 10000
+            runAsGroup: 10000
+          command: ["/opt/hermes/docker/main-wrapper.sh"]
+          args: ["serve", "--host", "0.0.0.0", "--port", "9119", "--skip-build"]
+          ports:
+            - name: serve
+              containerPort: 9119
+              protocol: TCP
+          env:
+            - name: TZ
+              value: America/Denver
+            - name: HERMES_HOME
+              value: /opt/data
+            - name: HERMES_SHARED_AUTH_DIR
+              value: /opt/data/shared-auth
+            - name: DISABLE_AUTOUPDATER
+              value: "1"
+            - name: HERMES_DASHBOARD_PUBLIC_URL
+              value: http://hermes.lab.nohermosa.com
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+          startupProbe:
+            httpGet:
+              path: /api/status
+              port: serve
+            periodSeconds: 5
+            failureThreshold: 36
+          readinessProbe:
+            httpGet:
+              path: /api/status
+              port: serve
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/status
+              port: serve
+            periodSeconds: 30
+            failureThreshold: 3
+          volumeMounts:
+            - name: state
+              mountPath: /opt/data
+            - name: shared
+              mountPath: /opt/shared
       volumes:
         - name: state
           persistentVolumeClaim:
