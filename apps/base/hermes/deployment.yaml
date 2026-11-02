@@ -25,7 +25,7 @@ spec:
         - name: forgejo-registry
       containers:
         - name: hermes
-          image: forgejo.nohermosa.com/mike/hermes-agent:v2026.9.24-clis1
+          image: docker.io/nousresearch/hermes-agent:v0.22.5
           args: ["gateway", "run"]
           env:
             - name: TZ
@@ -36,6 +36,8 @@ spec:
               value: /opt/data/shared-auth
             - name: DISABLE_AUTOUPDATER
               value: "1"
+            - name: PATH
+              value: /opt/data/clis/bin:/opt/hermes/.venv/bin:/usr/local/bin:/usr/bin:/bin
           resources:
             requests:
               cpu: 250m
@@ -52,7 +54,7 @@ spec:
         # run s6-overlay (which would otherwise start a second init tree and
         # could chown /opt/data on boot). Gateway args stay untouched.
         - name: hermes-serve
-          image: forgejo.nohermosa.com/mike/hermes-agent:v2026.9.24-clis1
+          image: docker.io/nousresearch/hermes-agent:v0.22.5
           # Same uid as the image `hermes` user. Skip s6 ENTRYPOINT (command
           # below) so we do not run a second init/chown. main-wrapper allows
           # uid==hermes without s6-setuidgid, which is not on PATH here.
@@ -76,6 +78,8 @@ spec:
               value: "1"
             - name: HERMES_DASHBOARD_PUBLIC_URL
               value: http://hermes.lab.nohermosa.com
+            - name: PATH
+              value: /opt/data/clis/bin:/opt/hermes/.venv/bin:/usr/local/bin:/usr/bin:/bin
           resources:
             requests:
               cpu: 100m
