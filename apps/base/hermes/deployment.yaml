@@ -21,6 +21,7 @@ spec:
     spec:
       securityContext:
         fsGroup: 100
+        fsGroupChangePolicy: OnRootMismatch
       imagePullSecrets:
         - name: forgejo-registry
       containers:
