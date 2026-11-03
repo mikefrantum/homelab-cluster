@@ -8,8 +8,8 @@ resources:
   - forgejo-registry.enc.yaml
   - vault-git.enc.yaml
   - dashboard-secret.yaml
-  - ingress.yaml
   - radicale-secret.yaml
+  - ingress.yaml
 patches:
   - patch: |-
       apiVersion: apps/v1
@@ -29,6 +29,8 @@ patches:
                       name: claude-oauth
                   - secretRef:
                       name: vault-git
+                  - secretRef:
+                      name: radicale-credentials
               - name: hermes-serve
                 envFrom:
                   - secretRef:
@@ -39,3 +41,5 @@ patches:
                       name: vault-git
                   - secretRef:
                       name: hermes-dashboard-auth
+                  - secretRef:
+                      name: radicale-credentials
