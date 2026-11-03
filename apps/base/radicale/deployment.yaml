@@ -36,6 +36,10 @@ spec:
               value: "/secrets/users"
             - name: RADICALE_CONFIG_AUTH_HTPASSWD_ENCRYPTION
               value: "bcrypt"
+            - name: RADICALE_CONFIG_RIGHTS_TYPE
+              value: "from_file"
+            - name: RADICALE_CONFIG_RIGHTS_FILE
+              value: "/config/rights"
           ports:
             - containerPort: 5232
           volumeMounts:
@@ -45,6 +49,10 @@ spec:
               mountPath: /secrets/users
               subPath: users
               readOnly: true
+            - name: rights
+              mountPath: /config/rights
+              subPath: rights
+              readOnly: true
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -52,4 +60,6 @@ spec:
         - name: htpasswd
           secret:
             secretName: radicale-htpasswd
-
+        - name: rights
+          configMap:
+            name: radicale-rights

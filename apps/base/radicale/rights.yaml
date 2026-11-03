@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: radicale-rights
+  namespace: radicale
+data:
+  rights: |
+    # Owner keeps full access to their own tree (required once type=from_file).
+    [owner]
+    user = .+
+    collection = {user}(/.*)?
+    permissions = rRwW
+
+    # Bot read+write on all of mike's calendars (UPS, personal, whatever).
+    [hermes-mike]
+    user = hermes
+    collection = mike(/.*)?
+    permissions = rRwW
