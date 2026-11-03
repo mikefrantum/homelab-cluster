@@ -41,6 +41,9 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: media
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: radicale
     - to:
         - ipBlock:
             cidr: 0.0.0.0/0

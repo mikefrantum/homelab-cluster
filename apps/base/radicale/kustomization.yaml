@@ -6,4 +6,3 @@ resources:
   - service.yaml
   - pvc.yaml
   - rights.yaml
-  - networkpolicy.yaml

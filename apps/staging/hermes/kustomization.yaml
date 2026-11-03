@@ -9,6 +9,7 @@ resources:
   - vault-git.enc.yaml
   - dashboard-secret.yaml
   - ingress.yaml
+  - radicale-secret.yaml
 patches:
   - patch: |-
       apiVersion: apps/v1

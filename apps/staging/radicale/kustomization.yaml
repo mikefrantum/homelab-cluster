@@ -7,4 +7,3 @@ resources:
   - cloudflare.yaml
   - cloudflare-secret.yaml
   - htpasswd-secret.yaml
-  - radicale-secret.yaml
