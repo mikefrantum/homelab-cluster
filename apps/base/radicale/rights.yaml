@@ -5,14 +5,17 @@ metadata:
   namespace: radicale
 data:
   rights: |
-    # Owner keeps full access to their own tree (required once type=from_file).
-    [owner]
-    user = .+
-    collection = {user}(/.*)?
-    permissions = rRwW
+    [root]
+    user: .+
+    collection:
+    permissions: R
 
-    # Bot read+write on all of mike's calendars (UPS, personal, whatever).
+    [owner]
+    user: .+
+    collection: {user}(/.*)?
+    permissions: rRwW
+
     [hermes-mike]
-    user = hermes
-    collection = mike(/.*)?
-    permissions = rRwW
+    user: hermes
+    collection: mike(/.*)?
+    permissions: rRwW
