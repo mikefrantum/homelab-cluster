@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 4get
+  namespace: 4get
+  labels:
+    app.kubernetes.io/name: 4get
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: 4get
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: 4get
+    spec:
+      containers:
+        - name: fourget
+          image: luuul/4get:1.0.64
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            - name: TZ
+              value: America/Denver
+            - name: FOURGET_PROTO
+              value: http
+            - name: FOURGET_SERVER_NAME
+              value: 4get.lab.nohermosa.com
+          volumeMounts:
+            - name: icons
+              mountPath: /var/www/html/4get/icons
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+      volumes:
+        - name: icons
+          emptyDir: {}
