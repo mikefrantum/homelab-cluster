@@ -21,7 +21,7 @@ spec:
         kubernetes.io/hostname: server0
       containers:
         - name: syncthing
-          image: ghcr.io/linuxserver/syncthing:2.1.5
+          image: ghcr.io/linuxserver/syncthing:2.1.7
           env:
             # 99:100 (nobody:users) matches ownership on server0's disks
             - name: PUID
