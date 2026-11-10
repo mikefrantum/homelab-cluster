@@ -20,8 +20,10 @@ spec:
         policy-type: app
     spec:
       securityContext:
-        fsGroup: 100
+        fsGroup: 10000
         fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 100
       imagePullSecrets:
         - name: forgejo-registry
       containers:
