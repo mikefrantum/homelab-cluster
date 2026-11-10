@@ -28,7 +28,7 @@ spec:
         - name: forgejo-registry
       containers:
         - name: hermes
-          image: docker.io/nousresearch/hermes-agent:v0.23.0
+          image: docker.io/nousresearch/hermes-agent:v0.23.1
           args: ["gateway", "run"]
           env:
             - name: TZ
@@ -57,7 +57,7 @@ spec:
         # run s6-overlay (which would otherwise start a second init tree and
         # could chown /opt/data on boot). Gateway args stay untouched.
         - name: hermes-serve
-          image: docker.io/nousresearch/hermes-agent:v0.23.0
+          image: docker.io/nousresearch/hermes-agent:v0.23.1
           # Same uid as the image `hermes` user. Skip s6 ENTRYPOINT (command
           # below) so we do not run a second init/chown. main-wrapper allows
           # uid==hermes without s6-setuidgid, which is not on PATH here.
