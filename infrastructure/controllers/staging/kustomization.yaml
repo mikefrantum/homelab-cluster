@@ -8,3 +8,4 @@ resources:
   - cnpg
   - immich
   - nvidia-device-plugin
+  - kube-vip
