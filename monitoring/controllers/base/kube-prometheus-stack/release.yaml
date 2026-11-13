@@ -50,7 +50,7 @@ spec:
     prometheus:
       prometheusSpec:
         retention: 30d
-        retentionSize: 18GB
+        retentionSize: 32GB
         storageSpec:
           volumeClaimTemplate:
             spec:
@@ -58,7 +58,7 @@ spec:
               accessModes: ["ReadWriteOnce"]
               resources:
                 requests:
-                  storage: 20Gi
+                  storage: 40Gi
     alertmanager:
       templateFiles:
         telegram.tmpl: |-
