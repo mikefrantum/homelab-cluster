@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+  namespace: homeassistant
+  labels:
+    app: homeassistant
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: homeassistant
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      terminationGracePeriodSeconds: 60
+      # hostNetwork ties HA to this node's IP (mDNS/SSDP/LAN device discovery, same pattern as plex).
+      # If a Zigbee/Z-Wave USB stick lives on a different node, move nodeSelector below to that node instead.
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      nodeSelector:
+        kubernetes.io/hostname: server0
+      containers:
+        - name: homeassistant
+          image: ghcr.io/home-assistant/home-assistant:2026.11.1
+          securityContext:
+            # Needed for multicast discovery and optional USB passthrough; tighten later if HA stays config-only.
+            privileged: true
+          env:
+            - name: TZ
+              value: America/Denver
+          ports:
+            - containerPort: 8123
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            # USB serial coordinator passthrough (Zigbee/Z-Wave stick), disabled by default.
+            # Uncomment this volumeMount and the matching hostPath volume below, then point
+            # the path at the real device under /dev/serial/by-id on whichever node it's plugged into.
+            # - name: usb-coordinator
+            #   mountPath: /dev/serial/by-id/REPLACE_WITH_REAL_DEVICE_ID
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8123
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8123
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8123
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
+        # - name: usb-coordinator
+        #   hostPath:
+        #     path: /dev/serial/by-id/REPLACE_WITH_REAL_DEVICE_ID
+        #     type: CharDevice
