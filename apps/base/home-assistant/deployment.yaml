@@ -26,7 +26,7 @@ spec:
         kubernetes.io/hostname: server0
       containers:
         - name: homeassistant
-          image: ghcr.io/home-assistant/home-assistant:2026.11.1
+          image: ghcr.io/home-assistant/home-assistant:2026.11.2
           securityContext:
             # Needed for multicast discovery and optional USB passthrough; tighten later if HA stays config-only.
             privileged: true
