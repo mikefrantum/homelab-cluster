@@ -18,6 +18,23 @@
       "prBodyNotes": [
         "⚠️ After merging: Run the WordPress DB upgrade at https://zoomzoom.design/wp-admin/upgrade.php"
       ]
+    },
+    {
+      "description": "Filebrowser Quantum majors need a BoltDB→SQLite migration. Do not automerge.",
+      "matchPackageNames": [
+        "ghcr.io/gtsteffaniak/filebrowser"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "linuxserver leftover Ubuntu 20.04 tags are not app versions (20 > 5 numerically).",
+      "matchPackageNames": [
+        "/^ghcr.io\\/linuxserver\\//"
+      ],
+      "allowedVersions": "!/^20\\.04/"
     }
   ]
 }
