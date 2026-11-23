@@ -6,11 +6,15 @@ metadata:
 data:
   config.yaml: |
     server:
-      database: /home/filebrowser/data/database.db
+      database:
+        path: /home/filebrowser/data/filebrowser.sqlite
+        migrateFrom: /home/filebrowser/data/database.db.old
       cacheDir: /cache
       sources:
         - path: /folder
           config:
             defaultEnabled: true
+    http:
+      trustProxyHeaders: true
     auth:
-      tokenExpirationHours: 720   # 30 days; whole number of hours
+      tokenExpirationHours: 720
