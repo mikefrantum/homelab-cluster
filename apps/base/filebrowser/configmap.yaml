@@ -8,7 +8,6 @@ data:
     server:
       database:
         path: /home/filebrowser/data/filebrowser.sqlite
-        migrateFrom: /home/filebrowser/data/database.db.old
       cacheDir: /cache
       sources:
         - path: /folder
