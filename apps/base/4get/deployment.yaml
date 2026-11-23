@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: fourget
-          image: luuul/4get:1.0.64
+          image: luuul/4get:1.0.66
           ports:
             - name: http
               containerPort: 80
