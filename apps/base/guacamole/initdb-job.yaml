@@ -20,7 +20,7 @@ spec:
               mountPath: /schema
       containers:
         - name: apply-schema
-          image: postgres:18
+          image: postgres:19
           command:
             - sh
             - -c
